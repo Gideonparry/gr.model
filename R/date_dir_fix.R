@@ -19,8 +19,6 @@ date_dir_fix <- function(data, firstmonth, lastmonth, startdate){
   datevals <- abs(datevals)
 
 
-
-
   ## Months between 1st and last month. Added 12 to count elapesed time while
   ## accounting for the fact the the last month in in the 2nd year.
   numerator <- 12 + lastmonth - firstmonth + 1
