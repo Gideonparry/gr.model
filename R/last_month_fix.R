@@ -21,8 +21,8 @@ last_month_fix <- function(data, firstmonth, wrongmonth, rightmonth, startdate,
 
   ## multiplying by proper amount
   datevals <- datevals *
-    ((12*diffyearright + rightmonth - firstmonth) /
-       (12*diffyearwrong + wrongmonth - firstmonth))
+    ((12*diffyearright + rightmonth + 1 - firstmonth) /
+       (12*diffyearwrong + wrongmonth + 1 - firstmonth))
 
   ## Going back to origninal start date
   datevals <- datevals + val1
