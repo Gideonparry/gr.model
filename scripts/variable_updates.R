@@ -1,5 +1,6 @@
 library(stringr)
-all_codes <- list.dirs("D:\\moved_data-selected", recursive = FALSE)
+all_codes <- list.dirs("C:\Users\bean_student\Documents\meta_compatable\codes\moved_data",
+                       recursive = FALSE)
 all_codes <- str_sub(all_codes,-6,-1)
 all_codes
 data_list <- list()
