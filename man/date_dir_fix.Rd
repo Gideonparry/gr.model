@@ -4,16 +4,14 @@
 \alias{date_dir_fix}
 \title{Fixing dates moving the wrong direction}
 \usage{
-date_dir_fix(data, firstmonth, lastmonth, startdate)
+date_dir_fix(data, startdate, enddate)
 }
 \arguments{
 \item{data}{the data file to fix date order}
 
-\item{firstmonth}{The number corresponding to the first month on the graph}
-
-\item{lastmonth}{The number corresponding to the last month on the graph}
-
 \item{startdate}{the 1st date on the graph}
+
+\item{enddate}{the last date on the graph}
 }
 \description{
 Fixing dates moving the wrong direction

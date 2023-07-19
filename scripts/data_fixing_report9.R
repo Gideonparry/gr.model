@@ -92,6 +92,15 @@ write.table(fig3_accume,"C:\\Users\\bean_student\\Documents\\GraphData\\Progress
 
 ################################ fig 4 #########################################
 library(lubridate)
+fig4_accume <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig4_accume.csv",
+                      header = FALSE)
+fig4_accume$V1 <- as.Date(fig4_accume$V1)
+fig4_accume$V1 <- fig4_accume$V1 %m-% months(1)
+fig4_accume
+Sys.sleep(60)
+write.table(fig4_accume,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig4_accume.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
 fig4_temp <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig4_temp.csv",
                         header = FALSE)
 fig4_temp$V1 <- as.Date(fig4_temp$V1)
@@ -552,3 +561,104 @@ data_frames <- lapply(data_frames, date_fix, "1965-03-31")
 data_frames
 N <- names(data_frames)
 for (i in seq_along(N)) write.table(data_frames[[i]], file=N[i], row.names = FALSE, col.names = FALSE, sep=",")
+
+
+######################################### fig 20 ################################
+fig20_accume <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_accume.csv",
+                        header = FALSE)
+fig20_accume <- last_month_fix(fig20_accume, 11, 4, 3, "1964-11-01")
+fig20_accume
+Sys.sleep(60)
+write.table(fig20_accume,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_accume.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
+fig20_g1 <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_g1.csv",
+                    header = FALSE)
+fig20_g1 <- last_month_fix(fig20_g1, 11, 4, 3, "1964-11-01")
+fig20_g1
+Sys.sleep(60)
+write.table(fig20_g1,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_g1.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
+
+fig20_g2 <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_g2.csv",
+                    header = FALSE)
+fig20_g2 <- last_month_fix(fig20_g2, 11, 4, 3, "1964-11-01")
+fig20_g2
+Sys.sleep(60)
+write.table(fig20_g2,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_g2.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
+fig20_r1a <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r1a.csv",
+                    header = FALSE)
+fig20_r1a <- last_month_fix(fig20_r1a, 11, 4, 3, "1964-11-01")
+fig20_r1a
+Sys.sleep(60)
+write.table(fig20_r1a,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r1a.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
+fig20_r1b <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r1b.csv",
+                     header = FALSE)
+fig20_r1b <- last_month_fix(fig20_r1b, 11, 4, 3, "1964-11-01")
+fig20_r1b
+Sys.sleep(60)
+write.table(fig20_r1b,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r1b.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
+fig20_r2a <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r2a.csv",
+                     header = FALSE)
+fig20_r2a <- last_month_fix(fig20_r2a, 11, 4, 3, "1964-11-01")
+fig20_r2a
+Sys.sleep(60)
+write.table(fig20_r2a,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r2a.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
+fig20_r2b <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r2b.csv",
+                     header = FALSE)
+fig20_r2b <- last_month_fix(fig20_r2b, 11, 4, 3, "1964-11-01")
+fig20_r2b
+Sys.sleep(60)
+write.table(fig20_r2b,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r2b.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
+
+fig20_r3a <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r3a.csv",
+                      header = FALSE)
+fig20_r3a <- last_month_fix(fig20_r3a, 11, 4, 3, "1964-11-01")
+fig20_r3a
+Sys.sleep(60)
+write.table(fig20_r3a,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r3a.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
+fig20_r3b <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r3b.csv",
+                      header = FALSE)
+fig20_r3b <- last_month_fix(fig20_r3b, 11, 4, 3, "1964-11-01")
+fig20_r3b
+Sys.sleep(60)
+write.table(fig20_r3b,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_r3b.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
+
+fig20_temp <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_temp.csv",
+                      header = FALSE)
+fig20_temp <- last_month_fix(fig20_temp, 11, 4, 3, "1964-11-01")
+fig20_temp
+Sys.sleep(60)
+write.table(fig20_temp,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_temp.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
+fig20_wind <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_wind.csv",
+                      header = FALSE)
+fig20_wind <- last_month_fix(fig20_wind, 11, 4, 3, "1964-11-01")
+fig20_wind
+Sys.sleep(60)
+write.table(fig20_wind,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig20_wind.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")
+
+############################ fig 23 ###########################################
+fig23_wind <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig23_wind.csv",
+                       header = FALSE)
+fig23_wind$V2 <- fig23_wind$V2 / 2
+fig23_wind
+write.table(fig23_wind,"C:\\Users\\bean_student\\Documents\\GraphData\\ProgressReport9\\data\\fig23_wind.csv",
+            row.names = FALSE, col.names = FALSE, sep=",")

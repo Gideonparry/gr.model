@@ -2,7 +2,7 @@
 % Please edit documentation in R/last_month_fix.R
 \name{last_month_fix}
 \alias{last_month_fix}
-\title{Fixing dates moving that end in the wrong month}
+\title{Fixing dates that end in the wrong month}
 \usage{
 last_month_fix(
   data,
@@ -30,5 +30,5 @@ last_month_fix(
 \item{diffyearright}{TRUE if the right month is in a different year}
 }
 \description{
-Fixing dates moving that end in the wrong month
+Fixing dates that end in the wrong month
 }

@@ -1,4 +1,4 @@
-#' Fixing dates moving that end in the wrong month
+#' Fixing dates that end in the wrong month
 #'
 #' @param data the data file to fix end month
 #' @param firstmonth The number corresponding to the first month on the graph
