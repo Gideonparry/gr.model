@@ -19,7 +19,7 @@ other_var <- function(folder_path, pattern, column, varval){
   for (file in roof_files) {
     data_frames[[file]] <- read.csv(file)
   }
-  head(data_frames)
+
 
   for (i in seq_along(data_frames)){
     data_frames[[i]][,column] <- varval
