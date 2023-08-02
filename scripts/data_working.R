@@ -45,7 +45,7 @@ roof_max <- data %>%
 gr_data <- inner_join(ground_max, roof_max, by = c("building_code", "city_code",
                                                    "season"))
 gr_data$gr <- gr_data$roof_max / gr_data$ground_max
-View(gr_data)
+
 
 
 ### filtering out the arch hangars
@@ -78,10 +78,10 @@ nrow(wind_avgs)
 nrow(temp_avgs)
 
 gr_data3 <- left_join(gr_data2, wind_avgs, by = c("city_code", "season"))
-View(gr_data3)
+
 
 gr_data_weather <- left_join(gr_data3, temp_avgs, by = c("city_code", "season"))
-View(gr_data_weather)
+
 
 
 gr_data_weather$sqrtgr <- sqrt(gr_data_weather$gr)
@@ -164,6 +164,50 @@ resid_backward <- step(resid_all, direction='both', scope=formula(resid_all),
                        trace=0)
 
 summary(resid_backward)
+summary(resid_forward)
 
-#### eval height wasn't included in either. Not looking too useful. Getting
-## rid of it could reduce NAs.
+colnames(gr_total)
+
+## looking at tree for potential interactions
+library(rpart)
+library(rpart.plot)
+tree <- rpart(formula = residual ~ roofflat + Exposure + over10 + lat +
+                Size + Heated, data = resid_no_na)
+
+prp(tree)
+
+## looking at transformations
+
+gr_vars <- gr_total[,c(7,8,30,23,32,28,20,24)]
+pairs(gr_vars)
+par(mfrow = c(2, 2))
+plot(gr_vars$sqrtgr,(gr_vars$over10))
+plot(gr_vars$sqrtgr,log(gr_vars$over10))
+plot(gr_vars$sqrtgr,sqrt(gr_vars$over10))
+plot(gr_vars$sqrtgr,(gr_vars$over10)^2)
+
+## log appears to be the closest to linear.
+
+
+### looking at size
+par(mfrow = c(2, 2))
+plot(gr_vars$sqrtgr,(gr_vars$Size))
+plot(gr_vars$sqrtgr,log(gr_vars$Size))
+plot(gr_vars$sqrtgr,sqrt(gr_vars$Size))
+plot(gr_vars$sqrtgr,(gr_vars$Size)^2)
+## again log looks best
+
+## looking at lat
+par(mfrow = c(2, 2))
+plot(gr_vars$sqrtgr,(gr_vars$lat))
+plot(gr_vars$sqrtgr,log(gr_vars$lat))
+plot(gr_vars$sqrtgr,sqrt(gr_vars$lat))
+plot(gr_vars$sqrtgr,(gr_vars$lat)^2)
+
+## these all look the same
+
+
+## model with varibales suggested by forward regression
+model8 <- lm(sqrtgr ~ logground + roofflat + Exposure + log(over10) +
+               lat + log(Size) + Heated, gr_total)
+summary(model8)
