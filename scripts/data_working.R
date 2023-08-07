@@ -211,3 +211,59 @@ plot(gr_vars$sqrtgr,(gr_vars$lat)^2)
 model8 <- lm(sqrtgr ~ logground + roofflat + Exposure + log(over10) +
                lat + log(Size) + Heated, gr_total)
 summary(model8)
+
+## transforming those varaibles and retrying step procedures
+resid_transform <- resid_no_na
+resid_transform$over10 <- log(resid_transform$over10)
+resid_transform$Size <- log(resid_transform$Size)
+
+####### retrying step
+resid_all2 <- lm(residual ~ ., resid_transform)
+resid_int2 <- lm(residual ~ 1, resid_transform)
+
+
+resid_forward2 <- step(resid_int2, direction='both', scope=formula(resid_all2),
+                      trace=0)
+
+resid_backward2 <- step(resid_all2, direction='both', scope=formula(resid_all2),
+                       trace=0)
+
+summary(resid_backward2)
+summary(resid_forward2)
+
+
+par(mfrow = c(1, 1))
+plot(fitted(resid_forward2), resid(resid_forward2))
+qqnorm(resid(resid_forward2), pch = 1, frame = FALSE)
+qqline(resid(resid_forward2), col = "steelblue", lwd = 2)
+
+
+# Size is odd. It looks like the big buildings highly influence the results,
+# but then when we take the log of size their influence significantly diminishes
+
+# Looking at tree with new suggestion
+
+tree2 <- rpart(formula = residual ~ roofflat + Exposure + over10 + lat,
+                data = resid_transform)
+
+prp(tree2)
+
+## checking new suggested model
+model9 <- lm(sqrtgr ~ logground + roofflat + Exposure + log(over10) + lat,
+             data = gr_total)
+
+summary(model9)
+plot(fitted(model9), resid(model9))
+library(onewaytests)
+bf.test(sqrtgr ~ logground + roofflat + Exposure + log(over10) + lat,
+        data = gr_total)
+qqnorm(resid(model9), pch = 1, frame = FALSE)
+qqline(resid(model9), col = "steelblue", lwd = 2)
+
+shapiro.test(resid(model9))
+
+
+### looks ok other than a few outlier points
+library(olsrr)
+ols_plot_cooksd_chart(model9)
+ols_plot_resid_lev(model9)
