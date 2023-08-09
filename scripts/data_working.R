@@ -204,6 +204,8 @@ plot(gr_vars$sqrtgr,log(gr_vars$lat))
 plot(gr_vars$sqrtgr,sqrt(gr_vars$lat))
 plot(gr_vars$sqrtgr,(gr_vars$lat)^2)
 
+
+par(mfrow = c(1, 1))
 ## these all look the same
 
 
@@ -254,9 +256,8 @@ model9 <- lm(sqrtgr ~ logground + roofflat + Exposure + log(over10) + lat,
 
 summary(model9)
 plot(fitted(model9), resid(model9))
-library(onewaytests)
-bf.test(sqrtgr ~ logground + roofflat + Exposure + log(over10) + lat,
-        data = gr_total)
+
+
 qqnorm(resid(model9), pch = 1, frame = FALSE)
 qqline(resid(model9), col = "steelblue", lwd = 2)
 
@@ -265,5 +266,173 @@ shapiro.test(resid(model9))
 
 ### looks ok other than a few outlier points
 library(olsrr)
+
 ols_plot_cooksd_chart(model9)
+# 105, 302, 304, 158
+
+ols_plot_resid_stand(model9)
+# 105, 158, 33`, 324`
+
 ols_plot_resid_lev(model9)
+# 105, 158, 300, 302, 304
+
+head(sort(resid(model9)))
+head(sort(resid(model9),TRUE))
+## removing big outliers
+gr_total_no_out <- gr_total[-c(134, 187, 196, 360),]
+
+model10 <- lm(sqrtgr ~ logground + roofflat + Exposure + log(over10) + lat,
+             data = gr_total_no_out)
+
+summary(model10)
+plot(fitted(model10), resid(model10))
+
+
+qqnorm(resid(model10), pch = 1, frame = FALSE)
+qqline(resid(model10), col = "steelblue", lwd = 2)
+
+shapiro.test(resid(model10))
+
+
+## removing those 4 points seems to have done a lot for normality assumption
+# On the very low end, residuals are all positive. Other than that I don't see
+# much of a pattern
+
+
+### no geography forward and backward
+resid_no_geo <- resid_no_na[,-9:-10]
+
+tree_resid <- rpart(formula = residual ~ roofflat + Exposure + over10 + temp_avg
+                    + Size + Heated, data = resid_no_na)
+prp(tree_resid)
+# roofflat and exposure could interact
+
+resid_all3 <- lm(residual ~ . + roofflat*Exposure + roofflat*Slope, resid_no_geo)
+resid_int3 <- lm(residual ~ 1, resid_no_geo)
+
+resid_forward3 <- step(resid_int3, direction='both', scope=formula(resid_all3),
+                       trace=0)
+
+resid_backward3 <- step(resid_all3, direction='both', scope=formula(resid_all3),
+                        trace=0)
+
+summary(resid_backward3)
+summary(resid_forward3)
+
+
+#positive coeficents on slope and heated don't make sense.
+
+library(glmnet)
+y <- resid_no_geo$residual
+x <- data.matrix(resid_no_geo[,colnames(resid_no_geo)[1:11]])
+cv_model <- cv.glmnet(x, y, alpha = 1)
+
+
+best_lambda <- cv_model$lambda.min
+best_lambda
+
+plot(cv_model)
+best_model <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model)
+
+# The lasso model eliminates slope, and it was confusing so I think I'll leave
+# it out. Insulated was also not included here. I'll try with and without
+plot(gr_total$gr,gr_total$Heated)
+median(na.omit(gr_total$gr[gr_total$Heated == 1]))
+median(na.omit(gr_total$gr[gr_total$Heated == 0]))
+
+plot(resid_no_geo$residual,resid_no_geo$Heated)
+median(resid_no_geo$residual[resid_no_geo$Heated == 1])
+median(resid_no_geo$residual[resid_no_geo$Heated == 0])
+
+
+# Heated having a positive coefficient makes even less sense now
+
+### looking at potentional transformations for temp
+par(mfrow = c(2, 2))
+plot(gr_total$sqrtgr,(gr_total$temp_avg))
+plot(gr_total$sqrtgr,log(gr_total$temp_avg))
+plot(gr_total$sqrtgr,sqrt(gr_total$temp_avg))
+plot(gr_total$sqrtgr,(gr_total$temp_avg)^2)
+par(mfrow = c(1, 1))
+
+## genuinley looks best untransformed
+
+model11 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(over10) +
+               log(Size) + temp_avg + Heated + Insulated,
+             data = gr_total)
+
+summary(model11)
+plot(fitted(model11), resid(model11))
+
+
+qqnorm(resid(model11), pch = 1, frame = FALSE)
+qqline(resid(model11), col = "steelblue", lwd = 2)
+
+shapiro.test(resid(model11))
+
+## Looks like it assumptions would be met without outliers
+
+# the is 1 observation with GR over 3. The graph matches, but there is probably
+# some mistake so that will be romved
+
+model12 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(over10) +
+                log(Size) + temp_avg + Heated + Insulated,
+              data = gr_total)
+
+summary(model12)
+plot(fitted(model12), resid(model12))
+
+
+qqnorm(resid(model12), pch = 1, frame = FALSE)
+qqline(resid(model12), col = "steelblue", lwd = 2)
+
+shapiro.test(resid(model12))
+
+library(psych)
+model_vars <- gr_total[,c("sqrtgr", "logground", "roofflat", "Exposure",
+                          "over10", "temp_avg", "Size", "Heated", "Insulated")]
+model_vars$over10 <- log(model_vars$over10)
+model_vars$Size <- log(model_vars$Size)
+
+pairs.panels(model_vars)
+
+
+## heated and insulated have multicolieiarity. 0.77 correlation Insulated will
+# be dropped since it is the less significant of the 2 and npt recomenned by
+# Lasso
+
+
+### New model without heated
+model13 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(over10) +
+                log(Size) + temp_avg + Heated,
+              data = gr_total)
+
+summary(model13)
+plot(fitted(model13), resid(model13))
+
+
+qqnorm(resid(model13), pch = 1, frame = FALSE)
+qqline(resid(model13), col = "steelblue", lwd = 2)
+
+shapiro.test(resid(model13))
+
+## after dropping big gr (>3)
+model14 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(over10) +
+                log(Size) + temp_avg + Heated,
+              data = gr_total[gr_total$gr <= 2,])
+summary(model14)
+plot(fitted(model14), resid(model14))
+
+
+qqnorm(resid(model14), pch = 1, frame = FALSE)
+qqline(resid(model14), col = "steelblue", lwd = 2)
+
+shapiro.test(resid(model14))
+
+
+
+
+summary(model13)
+summary(model14)
+
