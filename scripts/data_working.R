@@ -1,5 +1,5 @@
-data <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\complete_data.csv")
-metadata <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\gr_meta_ca_all.csv")
+data <- read.csv("D:\\complete_data.csv")
+metadata <- read.csv("D:\\gr_meta_ca_all.csv")
 data$season <- rep(NA, nrow(data))
 data$date <- as.Date(data$date)
 
@@ -409,10 +409,16 @@ model13 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(over10) +
               data = gr_total)
 
 summary(model13)
-plot(fitted(model13), resid(model13))
+plot(fitted(model13), resid(model13),
+     main = "Residual Plot With Outlier Point",
+     xlab = "Predicted Value",
+     ylab = "Residual Value")
+
+abline(h = 0)
 
 
-qqnorm(resid(model13), pch = 1, frame = FALSE)
+qqnorm(resid(model13), pch = 1, frame = FALSE,
+       main = "QQ Plot With Outlier Point")
 qqline(resid(model13), col = "steelblue", lwd = 2)
 
 shapiro.test(resid(model13))
@@ -422,10 +428,16 @@ model14 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(over10) +
                 log(Size) + temp_avg + Heated,
               data = gr_total[gr_total$gr <= 2,])
 summary(model14)
-plot(fitted(model14), resid(model14))
+plot(fitted(model14), resid(model14),
+     main = "Residual Plot Without Outlier Point",
+     xlab = "Predicted Value",
+     ylab = "Residual Value")
+
+abline(h = 0)
 
 
-qqnorm(resid(model14), pch = 1, frame = FALSE)
+qqnorm(resid(model14), pch = 1, frame = FALSE,
+       main = "QQ Plot Without Outlier Point")
 qqline(resid(model14), col = "steelblue", lwd = 2)
 
 shapiro.test(resid(model14))
