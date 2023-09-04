@@ -113,26 +113,26 @@ above_freeze <-  data %>%
 
 
 ### percentage days wind speed is over 10
-over10 <-  data %>%
+winter_wind <-  data %>%
   group_by(city_code, measurement, season) %>%
   filter(measurement == "wind") %>%
-  summarise(over10 = sum(value > 10)/length(value))
+  summarise(winter_wind = sum(value > 10)/length(value))
 
 
 
 
 
-gr_total <- inner_join(gr_all, over10, by = c("city_code", "season")) %>%
+gr_total <- inner_join(gr_all, winter_wind, by = c("city_code", "season")) %>%
   inner_join(above_freeze, by = c("city_code", "season"))
 
-## doing og model with remaining data
+## doing og model with remaining dataprp
 model1 <- lm(sqrtgr ~ logground, gr_total)
 summary(model1)
 
 gr_total$residual <- residuals(model1)
 
 #### models to predict residual
-model4 <- lm(residual ~ over10 + above_freeze, gr_total)
+model4 <- lm(residual ~ winter_wind + above_freeze, gr_total)
 summary(model4)
 # adjusted R^2 0.06935
 
@@ -140,7 +140,7 @@ model5 <- lm(residual ~ wind_avg + temp_avg, gr_total)
 summary(model5)
 # adjusted R^2 0.04645
 
-model6 <- lm(residual ~ over10 + temp_avg, gr_total)
+model6 <- lm(residual ~ winter_wind + temp_avg, gr_total)
 summary(model6)
 # adjusted R^2 0.09431
 
@@ -171,20 +171,21 @@ colnames(gr_total)
 ## looking at tree for potential interactions
 library(rpart)
 library(rpart.plot)
-tree <- rpart(formula = residual ~ roofflat + Exposure + over10 + lat +
+tree <- rpart(formula = residual ~ roofflat + Exposure + winter_wind  +
                 Size + Heated, data = resid_no_na)
-
 prp(tree)
 
+pruned_tree <- prune(tree, cp = 0.1)
+prp(pruned_tree)
 ## looking at transformations
 
 gr_vars <- gr_total[,c(7,8,30,23,32,28,20,24)]
 pairs(gr_vars)
 par(mfrow = c(2, 2))
-plot(gr_vars$sqrtgr,(gr_vars$over10))
-plot(gr_vars$sqrtgr,log(gr_vars$over10))
-plot(gr_vars$sqrtgr,sqrt(gr_vars$over10))
-plot(gr_vars$sqrtgr,(gr_vars$over10)^2)
+plot(gr_vars$sqrtgr,(gr_vars$winter_wind))
+plot(gr_vars$sqrtgr,log(gr_vars$winter_wind))
+plot(gr_vars$sqrtgr,sqrt(gr_vars$winter_wind))
+plot(gr_vars$sqrtgr,(gr_vars$winter_wind)^2)
 
 ## log appears to be the closest to linear.
 
@@ -210,13 +211,13 @@ par(mfrow = c(1, 1))
 
 
 ## model with varibales suggested by forward regression
-model8 <- lm(sqrtgr ~ logground + roofflat + Exposure + log(over10) +
+model8 <- lm(sqrtgr ~ logground + roofflat + Exposure + log(winter_wind) +
                lat + log(Size) + Heated, gr_total)
 summary(model8)
 
 ## transforming those varaibles and retrying step procedures
 resid_transform <- resid_no_na
-resid_transform$over10 <- log(resid_transform$over10)
+resid_transform$winter_wind <- log(resid_transform$winter_wind)
 resid_transform$Size <- log(resid_transform$Size)
 
 ####### retrying step
@@ -245,13 +246,13 @@ qqline(resid(resid_forward2), col = "steelblue", lwd = 2)
 
 # Looking at tree with new suggestion
 
-tree2 <- rpart(formula = residual ~ roofflat + Exposure + over10 + lat,
+tree2 <- rpart(formula = residual ~ roofflat + Exposure + winter_wind + lat,
                 data = resid_transform)
 
 prp(tree2)
 
 ## checking new suggested model
-model9 <- lm(sqrtgr ~ logground + roofflat + Exposure + log(over10) + lat,
+model9 <- lm(sqrtgr ~ logground + roofflat + Exposure + log(winter_wind) + lat,
              data = gr_total)
 
 summary(model9)
@@ -281,7 +282,7 @@ head(sort(resid(model9),TRUE))
 ## removing big outliers
 gr_total_no_out <- gr_total[-c(134, 187, 196, 360),]
 
-model10 <- lm(sqrtgr ~ logground + roofflat + Exposure + log(over10) + lat,
+model10 <- lm(sqrtgr ~ logground + roofflat + Exposure + log(winter_wind) + lat,
              data = gr_total_no_out)
 
 summary(model10)
@@ -302,19 +303,19 @@ shapiro.test(resid(model10))
 ### no geography forward and backward
 resid_no_geo <- resid_no_na[,-9:-10]
 
-tree_resid <- rpart(formula = residual ~ roofflat + Exposure + over10 + temp_avg
+tree_resid <- rpart(formula = residual ~ roofflat + Exposure + winter_wind + temp_avg
                     + Size + Heated, data = resid_no_na)
 prp(tree_resid)
 # roofflat and exposure could interact
 
-resid_all3 <- lm(residual ~ . + roofflat*Exposure + roofflat*Slope, resid_no_geo)
+resid_all3 <- lm(residual ~ . + roofflat*Exposure + roofflat*winter_wind, resid_no_geo)
 resid_int3 <- lm(residual ~ 1, resid_no_geo)
 
 resid_forward3 <- step(resid_int3, direction='both', scope=formula(resid_all3),
-                       trace=0)
+                       trace=1)
 
 resid_backward3 <- step(resid_all3, direction='both', scope=formula(resid_all3),
-                        trace=0)
+                        trace=1)
 
 summary(resid_backward3)
 summary(resid_forward3)
@@ -358,7 +359,7 @@ par(mfrow = c(1, 1))
 
 ## genuinley looks best untransformed
 
-model11 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(over10) +
+model11 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(winter_wind) + roofflat*winter_wind +
                log(Size) + temp_avg + Heated + Insulated,
              data = gr_total)
 
@@ -374,9 +375,9 @@ shapiro.test(resid(model11))
 ## Looks like it assumptions would be met without outliers
 
 # the is 1 observation with GR over 3. The graph matches, but there is probably
-# some mistake so that will be romved
+# some mistake so that will be removed
 
-model12 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(over10) +
+model12 <- lm(sqrtgr ~ logground + roofflat*Exposure  + roofflat*winter_wind +
                 log(Size) + temp_avg + Heated + Insulated,
               data = gr_total)
 
@@ -391,8 +392,8 @@ shapiro.test(resid(model12))
 
 library(psych)
 model_vars <- gr_total[,c("sqrtgr", "logground", "roofflat", "Exposure",
-                          "over10", "temp_avg", "Size", "Heated", "Insulated")]
-model_vars$over10 <- log(model_vars$over10)
+                          "winter_wind", "temp_avg", "Size", "Heated", "Insulated")]
+model_vars$winter_wind <- log(model_vars$winter_wind)
 model_vars$Size <- log(model_vars$Size)
 
 pairs.panels(model_vars)
@@ -404,7 +405,7 @@ pairs.panels(model_vars)
 
 
 ### New model without heated
-model13 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(over10) +
+model13 <- lm(sqrtgr ~ logground + roofflat*Exposure + roofflat*winter_wind +
                 log(Size) + temp_avg + Heated,
               data = gr_total)
 
@@ -424,7 +425,7 @@ qqline(resid(model13), col = "steelblue", lwd = 2)
 shapiro.test(resid(model13))
 
 ## after dropping big gr (>3)
-model14 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(over10) +
+model14 <- lm(sqrtgr ~ logground + roofflat*Exposure + roofflat*winter_wind +
                 log(Size) + temp_avg + Heated,
               data = gr_total[gr_total$gr <= 2,])
 summary(model14)
@@ -438,6 +439,7 @@ abline(h = 0)
 
 qqnorm(resid(model14), pch = 1, frame = FALSE,
        main = "QQ Plot Without Outlier Point")
+
 qqline(resid(model14), col = "steelblue", lwd = 2)
 
 shapiro.test(resid(model14))
@@ -447,4 +449,25 @@ shapiro.test(resid(model14))
 
 summary(model13)
 summary(model14)
+
+
+############ report plots
+par(mfrow = c(2, 2))
+plot((gr_total$Size),gr_total$sqrtgr,
+     main = " Size No transformation",
+     xlab = "Size",
+     ylab = "sqrtgr")
+plot(log(gr_total$Size),gr_total$sqrtgr,
+     main = " Size log transformation",
+     xlab = "Log Size",
+     ylab = "sqrtgr")
+
+plot((gr_total$winter_wind),gr_total$sqrtgr,
+     main = "Winter Wind No transformation",
+     xlab = "Winter Wind",
+     ylab = "sqrtgr")
+plot(log(gr_total$winter_wind),gr_total$sqrtgr,
+     main = "Winter Wind log transformation",
+     xlab = "Log Winter Wind",
+     ylab = "sqrtgr")
 
