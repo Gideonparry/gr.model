@@ -308,7 +308,8 @@ tree_resid <- rpart(formula = residual ~ roofflat + Exposure + winter_wind + tem
 prp(tree_resid)
 # roofflat and exposure could interact
 
-resid_all3 <- lm(residual ~ . + roofflat*Exposure + roofflat*winter_wind, resid_no_geo)
+resid_all3 <- lm(residual ~ . + roofflat*Exposure + roofflat*winter_wind,
+                 resid_no_geo[gr_total$gr <= 2,])
 resid_int3 <- lm(residual ~ 1, resid_no_geo)
 
 resid_forward3 <- step(resid_int3, direction='both', scope=formula(resid_all3),
@@ -417,7 +418,7 @@ plot(fitted(model13), resid(model13),
 
 abline(h = 0)
 
-
+Fresid_for
 qqnorm(resid(model13), pch = 1, frame = FALSE,
        main = "QQ Plot With Outlier Point")
 qqline(resid(model13), col = "steelblue", lwd = 2)
@@ -470,4 +471,7 @@ plot(log(gr_total$winter_wind),gr_total$sqrtgr,
      main = "Winter Wind log transformation",
      xlab = "Log Winter Wind",
      ylab = "sqrtgr")
+
+
+############################## validation ######################################
 
