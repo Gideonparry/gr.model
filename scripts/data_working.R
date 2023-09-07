@@ -309,7 +309,7 @@ prp(tree_resid)
 # roofflat and exposure could interact
 
 resid_all3 <- lm(residual ~ . + roofflat*Exposure + roofflat*winter_wind,
-                 resid_no_geo[gr_total$gr <= 2,])
+                 resid_no_geo[resid_no_geo$residual <= 1,])
 resid_int3 <- lm(residual ~ 1, resid_no_geo)
 
 resid_forward3 <- step(resid_int3, direction='both', scope=formula(resid_all3),
@@ -325,8 +325,9 @@ summary(resid_forward3)
 #positive coeficents on slope and heated don't make sense.
 
 library(glmnet)
-y <- resid_no_geo$residual
-x <- data.matrix(resid_no_geo[,colnames(resid_no_geo)[1:11]])
+y <- resid_no_geo$residual[resid_no_geo$residual <= 1]
+x <- data.matrix(resid_no_geo[resid_no_geo$residual <= 1,
+                              colnames(resid_no_geo)[1:11]])
 cv_model <- cv.glmnet(x, y, alpha = 1)
 
 
@@ -418,7 +419,7 @@ plot(fitted(model13), resid(model13),
 
 abline(h = 0)
 
-Fresid_for
+
 qqnorm(resid(model13), pch = 1, frame = FALSE,
        main = "QQ Plot With Outlier Point")
 qqline(resid(model13), col = "steelblue", lwd = 2)
@@ -473,5 +474,5 @@ plot(log(gr_total$winter_wind),gr_total$sqrtgr,
      ylab = "sqrtgr")
 
 
-############################## validation ######################################
+write.csv(gr_total[gr_total$gr <= 2,], "D:\\gr_model_data.csv")
 
