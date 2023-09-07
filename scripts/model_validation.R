@@ -1,7 +1,8 @@
 library(Metrics)
+library(randomForest)
 
 data <- read.csv("D:\\gr_model_data.csv")
-set.seed(1234)
+set.seed(123)
 
 ## taking sample to partition buildings
 train_nums <- sample(length(unique(data$building_code)),
@@ -45,3 +46,18 @@ abs_error_avg <- abs(avg_pred - valid_data$sqrtgr)
 median(abs_error_avg)
 
 
+# comparing accuracy for gr (not sqrt) each method to make later comparisons
+# more useful
+
+og_gr_pred <- original_prediction^2
+lin_gr_pred <- lin_pred^2
+
+rmse(valid_data$gr, og_gr_pred)
+median(abs(valid_data$gr - og_gr_pred))
+
+rmse(valid_data$gr[!is.na(lin_pred)], na.omit(lin_gr_pred))
+median(abs(valid_data$gr[!is.na(lin_gr_pred)] - na.omit(lin_gr_pred)))
+
+
+###### Random Forrest
+train_rf <- randomForest(sqrtgr, )
