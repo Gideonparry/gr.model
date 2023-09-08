@@ -1,10 +1,10 @@
-data <- read.csv("D:\\complete_data.csv")
-metadata <- read.csv("D:\\gr_meta_ca_all.csv")
+data <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\complete_data.csv")
+metadata <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\gr_meta_ca_all.csv")
 data$season <- rep(NA, nrow(data))
 data$date <- as.Date(data$date)
 
 
-
+## try assumption of 1 for missing exposure, 0 for heated, insulated and parpaet
 
 
 

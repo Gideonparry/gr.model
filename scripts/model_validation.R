@@ -1,7 +1,7 @@
 library(Metrics)
 library(randomForest)
 
-data <- read.csv("D:\\gr_model_data.csv")
+data <- read.csv("C:\\Users\\bean_student\\Documents\\gr_model_data.csv")
 set.seed(123)
 
 ## taking sample to partition buildings
@@ -60,4 +60,7 @@ median(abs(valid_data$gr[!is.na(lin_gr_pred)] - na.omit(lin_gr_pred)))
 
 
 ###### Random Forrest
-train_rf <- randomForest(sqrtgr, )
+train_rf <- randomForest(formula = gr ~ ground_max + wind_avg + temp_avg + Slope
+                         + Size + Roof_Type + Exposure + Heated + Insulated +
+                           above_freeze, data =train_data)
+
