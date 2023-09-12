@@ -131,6 +131,9 @@ summary(model1)
 
 gr_total$residual <- residuals(model1)
 
+# Not taking size of parapet into account, just if it's there or not
+gr_total$Parapet <- ifelse(gr_total$Parapet > 0, 1, 0)
+
 #### models to predict residual
 model4 <- lm(residual ~ winter_wind + above_freeze, gr_total)
 summary(model4)
@@ -149,7 +152,7 @@ summary(model7)
 # adjusted R^2 0.05321
 
 
-resid_data <- gr_total[,c(10, 12, 19:21, 23:25, 28:30, 32, 34:35)]
+resid_data <- gr_total[,c(10, 12, 19:21, 23:26, 28:30, 32, 34:35)]
 
 resid_no_na <- na.omit(resid_data)
 
@@ -172,7 +175,7 @@ colnames(gr_total)
 library(rpart)
 library(rpart.plot)
 tree <- rpart(formula = residual ~ roofflat + Exposure + winter_wind  +
-                Size + Heated, data = resid_no_na)
+                Size + Heated + Parapet, data = resid_no_na)
 prp(tree)
 
 pruned_tree <- prune(tree, cp = 0.1)
@@ -301,7 +304,7 @@ shapiro.test(resid(model10))
 
 
 ### no geography forward and backward
-resid_no_geo <- resid_no_na[,-9:-10]
+resid_no_geo <- resid_no_na[,-10:-11]
 
 tree_resid <- rpart(formula = residual ~ roofflat + Exposure + winter_wind + temp_avg
                     + Size + Heated, data = resid_no_na)
@@ -310,7 +313,7 @@ prp(tree_resid)
 
 resid_all3 <- lm(residual ~ . + roofflat*Exposure + roofflat*winter_wind,
                  resid_no_geo[resid_no_geo$residual <= 1,])
-resid_int3 <- lm(residual ~ 1, resid_no_geo)
+resid_int3 <- lm(residual ~ 1, resid_no_geo[resid_no_geo$residual <= 1,])
 
 resid_forward3 <- step(resid_int3, direction='both', scope=formula(resid_all3),
                        trace=1)
@@ -327,7 +330,7 @@ summary(resid_forward3)
 library(glmnet)
 y <- resid_no_geo$residual[resid_no_geo$residual <= 1]
 x <- data.matrix(resid_no_geo[resid_no_geo$residual <= 1,
-                              colnames(resid_no_geo)[1:11]])
+                              colnames(resid_no_geo)[1:12]])
 cv_model <- cv.glmnet(x, y, alpha = 1)
 
 
@@ -362,7 +365,7 @@ par(mfrow = c(1, 1))
 ## genuinley looks best untransformed
 
 model11 <- lm(sqrtgr ~ logground + roofflat*Exposure + log(winter_wind) + roofflat*winter_wind +
-               log(Size) + temp_avg + Heated + Insulated,
+               log(Size) + temp_avg + Heated + Insulated + Parapet,
              data = gr_total)
 
 summary(model11)
@@ -380,7 +383,7 @@ shapiro.test(resid(model11))
 # some mistake so that will be removed
 
 model12 <- lm(sqrtgr ~ logground + roofflat*Exposure  + roofflat*winter_wind +
-                log(Size) + temp_avg + Heated + Insulated,
+                log(Size) + temp_avg + Heated + Insulated + Parapet,
               data = gr_total)
 
 summary(model12)
@@ -408,7 +411,7 @@ pairs.panels(model_vars)
 
 ### New model without heated
 model13 <- lm(sqrtgr ~ logground + roofflat*Exposure + roofflat*winter_wind +
-                log(Size) + temp_avg + Heated,
+                log(Size) + temp_avg + Heated + Parapet,
               data = gr_total)
 
 summary(model13)
@@ -428,7 +431,7 @@ shapiro.test(resid(model13))
 
 ## after dropping big gr (>3)
 model14 <- lm(sqrtgr ~ logground + roofflat*Exposure + roofflat*winter_wind +
-                log(Size) + temp_avg + Heated,
+                log(Size) + temp_avg + Heated + Parapet,
               data = gr_total[gr_total$gr <= 2,])
 summary(model14)
 plot(fitted(model14), resid(model14),
@@ -474,5 +477,5 @@ plot(log(gr_total$winter_wind),gr_total$sqrtgr,
      ylab = "sqrtgr")
 
 
-write.csv(gr_total[gr_total$gr <= 2,], "D:\\gr_model_data.csv")
+write.csv(gr_total[gr_total$gr <= 2,], "C:\\Users\\bean_student\\Documents\\gr_model_data.csv")
 
