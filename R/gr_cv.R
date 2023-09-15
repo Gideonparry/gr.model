@@ -9,7 +9,7 @@
 #'
 #' @import Metrics
 #' @import randomForest
-#'
+#' @import e1071
 #'
 
 
@@ -57,6 +57,11 @@ gr_cv <- function(train_data, test_data){
 
   rmse_forest <- rmse(forest_test$gr, forest_preds)
   mdae_forest <- median(abs(forest_test$gr - forest_preds))
+
+
+
+
+
 
 
   pred_metrics <- c("Original model RMSE sqrt", "New model RSME sqrt",

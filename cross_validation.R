@@ -1,5 +1,6 @@
 library(Metrics)
 library(randomForest)
+library(e1071)
 
 data <- read.csv("C:\\Users\\bean_student\\Documents\\gr_model_data.csv")
 set.seed(123)
@@ -81,4 +82,13 @@ cbind(obs_fold1_results[,1],(as.numeric(obs_fold1_results[,2]) +
                            as.numeric(obs_fold3_results[,2]) +
                            as.numeric(obs_fold4_results[,2]) +
                            as.numeric(obs_fold5_results[,2]))/5 )
+
+## Adding radial svm
+svm_mod = svm(formula = gr ~ . -building_code -city_code -season,
+              data =forest_train, kernel = "radial", cost = 10, scale = TRUE)
+
+svm_preds <- predict(svm_mod, forest_test)
+rmse_svm <- rmse(forest_test$gr, svm_preds)
+mdae_svm <- median(abs(forest_test$gr - svm_preds))
+
 
