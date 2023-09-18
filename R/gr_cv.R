@@ -18,19 +18,13 @@ gr_cv <- function(train_data, test_data){
   original_model <- lm(sqrtgr ~ logground, train_data)
   original_prediction <- predict(original_model, test_data)
 
-  rmse_og_sqrt <- rmse(test_data$sqrtgr, original_prediction)
-  mdae_og_sqrt <- median(abs(original_prediction - test_data$sqrtgr))
 
 
   # Following the process with the linear model
   lin_mod <-  lm(sqrtgr ~ logground + roofflat*Exposure + roofflat*winter_wind +
-                   log(Size) + temp_avg + Heated + Parapet,
+                   log(Size) + temp_avg  + Parapet,
                  data = train_data)
   lin_pred <- predict(lin_mod, test_data)
-
-  rmse_mlr_sqrt <- rmse(test_data$sqrtgr[!is.na(lin_pred)], na.omit(lin_pred))
-  mdae_mlr_sqrt <-
-    median(abs(na.omit(lin_pred) - test_data$sqrtgr[!is.na(lin_pred)]))
 
 
 
@@ -38,12 +32,6 @@ gr_cv <- function(train_data, test_data){
 
   og_gr_pred <- original_prediction^2
   lin_gr_pred <- lin_pred^2
-
-  rmse_og <- rmse(test_data$gr, og_gr_pred)
-  mdae_og <- median(abs(test_data$gr - og_gr_pred))
-
-  rsme_mlr <- rmse(test_data$gr[!is.na(lin_pred)], na.omit(lin_gr_pred))
-  mdae_mlr <- median(abs(test_data$gr[!is.na(lin_gr_pred)] - na.omit(lin_gr_pred)))
 
   ## Random Forest model check
 
@@ -55,25 +43,22 @@ gr_cv <- function(train_data, test_data){
   forest_preds <- predict(train_rf, forest_test)
 
 
-  rmse_forest <- rmse(forest_test$gr, forest_preds)
-  mdae_forest <- median(abs(forest_test$gr - forest_preds))
+
+  ## making a list of vectors of results and names to return
+
+  results <- list(test_data$sqrtgr, test_data$gr, forest_test$gr,
+                  original_prediction, lin_pred, og_gr_pred, lin_gr_pred,
+                  forest_preds)
+
+  names(results) <- c("Square root GR original test data",
+                      "GR Original test data", "GR RF test data",
+                      "original model predictions sqrt",
+                      "New model predictions sqrt",
+                      "Original model predictions gr",
+                      "New model predictions gr", "Random Forest predictons")
 
 
+  results
 
 
-
-
-
-  pred_metrics <- c("Original model RMSE sqrt", "New model RSME sqrt",
-                    "Original model median abs error sqrt",
-                    "New model median abs error sqrt", "Original model RMSE",
-                    "New model RMSE", "Random forest RMSE",
-                    "Original Model median abs error",
-                    "New Model median abs error",
-                    "Random forest median abs error")
-  pred_results <- c(rmse_og_sqrt, rmse_mlr_sqrt, mdae_og_sqrt, mdae_mlr_sqrt,
-                    rmse_og, rsme_mlr, rmse_forest, mdae_og, mdae_mlr,
-                    mdae_forest)
-
-  cbind(pred_metrics,pred_results)
 }
