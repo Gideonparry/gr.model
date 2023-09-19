@@ -9,20 +9,26 @@
 #'
 #' @import Metrics
 #' @import randomForest
-#' @import e1071
 #'
 
 
-gr_cv <- function(train_data, test_data){
+gr_cv <- function(train_data, test_data,
+                  formula1 = "sqrtgr ~ logground",
+                  forumula2 = "sqrtgr ~ logground + roofflat*Exposure +
+                  roofflat*winter_wind +
+                   log(Size) + temp_avg + Heated + Parapet",
+                  tree_vars = c(7, 11, 13, 19:22, 25:27, 33, 35),
+                  rf_y = "gr"){
+
+
   # Taking the original model with the specified train and test data
-  original_model <- lm(sqrtgr ~ logground, train_data)
+  original_model <- lm(formula = formula1, train_data)
   original_prediction <- predict(original_model, test_data)
 
 
 
   # Following the process with the linear model
-  lin_mod <-  lm(sqrtgr ~ logground + roofflat*Exposure + roofflat*winter_wind +
-                   log(Size) + temp_avg + Heated + Parapet,
+  lin_mod <-  lm(formula = forumula2,
                  data = train_data)
   lin_pred <- predict(lin_mod, test_data)
 
@@ -35,10 +41,11 @@ gr_cv <- function(train_data, test_data){
 
   ## Random Forest model check
 
-  forest_train <- na.omit(train_data[,c(2:5, 7, 11, 13, 19:22, 25:27, 33, 35)])
-  forest_test <- na.omit(test_data[,c(2:5, 7, 11, 13, 19:22, 25:27, 33, 35)])
+  forest_train <- na.omit(train_data[,tree_vars])
+  forest_test <- na.omit(test_data[,tree_vars])
 
-  train_rf <- randomForest(formula = gr ~ . -building_code -city_code -season,
+  ## It works as is, but making this an argument would be better
+  train_rf <- randomForest(formula = gr ~ .,
                            data =forest_train)
   forest_preds <- predict(train_rf, forest_test)
 

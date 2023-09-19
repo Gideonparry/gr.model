@@ -4,7 +4,15 @@
 \alias{gr_cv}
 \title{Returns the rsme and median absolute error of different models}
 \usage{
-gr_cv(train_data, test_data)
+gr_cv(
+  train_data,
+  test_data,
+  formula1 = "sqrtgr ~ logground",
+  forumula2 =
+    "sqrtgr ~ logground + roofflat*Exposure +\\n                  roofflat*winter_wind +\\n                   log(Size) + temp_avg + Heated + Parapet",
+  tree_vars = c(7, 11, 13, 19:22, 25:27, 33, 35),
+  rf_y = "gr"
+)
 }
 \arguments{
 \item{train_data}{The training data}
