@@ -22,7 +22,7 @@ gr_cv <- function(train_data, test_data){
 
   # Following the process with the linear model
   lin_mod <-  lm(sqrtgr ~ logground + roofflat*Exposure + roofflat*winter_wind +
-                   log(Size) + temp_avg  + Parapet,
+                   log(Size) + temp_avg + Heated + Parapet,
                  data = train_data)
   lin_pred <- predict(lin_mod, test_data)
 
