@@ -9,7 +9,7 @@
 #'
 #' @import Metrics
 #' @import randomForest
-#'
+#' @import stats
 
 
 gr_cv <- function(train_data, test_data,
@@ -22,15 +22,15 @@ gr_cv <- function(train_data, test_data,
 
 
   # Taking the original model with the specified train and test data
-  original_model <- lm(formula = formula1, train_data)
-  original_prediction <- predict(original_model, test_data)
+  original_model <- stats::lm(formula = formula1, train_data)
+  original_prediction <- stats::predict(original_model, test_data)
 
 
 
   # Following the process with the linear model
-  lin_mod <-  lm(formula = forumula2,
+  lin_mod <-  stats::lm(formula = forumula2,
                  data = train_data)
-  lin_pred <- predict(lin_mod, test_data)
+  lin_pred <- stats::predict(lin_mod, test_data)
 
 
 
@@ -41,13 +41,13 @@ gr_cv <- function(train_data, test_data,
 
   ## Random Forest model check
 
-  forest_train <- na.omit(train_data[,tree_vars])
-  forest_test <- na.omit(test_data[,tree_vars])
+  forest_train <- stats::na.omit(train_data[,tree_vars])
+  forest_test <- stats::na.omit(test_data[,tree_vars])
 
   ## It works as is, but making this an argument would be better
-  train_rf <- randomForest(formula = gr ~ .,
+  train_rf <- randomForest::randomForest(formula = gr ~ .,
                            data =forest_train)
-  forest_preds <- predict(train_rf, forest_test)
+  forest_preds <- stats::predict(train_rf, forest_test)
 
 
 
