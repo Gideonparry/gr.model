@@ -104,8 +104,17 @@ acc_test(data = data, seed = 2319,
 colnames(data)
 
 ### rf with weather, exposure and flat
-acc_test(data, 123, tree_vars = c(7,9,13,24,31,22))[c(4,8,12,16)]
+acc_test(data, 123, tree_vars = c(7,9,13,24,31,33))[c(4,8,12,16)]
 
-acc_test(data, 1234, tree_vars = c(7,9,13,24,31,22))[c(4,8,12,16)]
+acc_test(data, 1234, tree_vars = c(7,9,13,24,31,33))[c(4,8,12,16)]
 
-acc_test(data, 2319, tree_vars = c(7,9,13,24,31,22))[c(4,8,12,16)]
+acc_test(data, 2319, tree_vars = c(7,9,13,24,31,33))[c(4,8,12,16)]
+
+
+
+## rf with weather only
+acc_test(data, 123, tree_vars = c(7,9,13,33))[c(4,8,12,16)]
+
+acc_test(data, 1234, tree_vars = c(7,9,13,33))[c(4,8,12,16)]
+
+acc_test(data, 2319, tree_vars = c(7,9,13,33))[c(4,8,12,16)]

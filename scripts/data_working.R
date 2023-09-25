@@ -30,7 +30,12 @@ data$season <- ifelse((data$date > as.Date("1966-07-01") &
                          data$date < as.Date("1967-07-01")), 11, data$season)
 
 ################# summarise by building code and season #####################
+
+
 library(dplyr)
+library(lubridate)
+
+
 ground_max <- data %>%
   group_by(building_code, city_code, season) %>%
   filter(measurement == "ground") %>%
@@ -57,7 +62,7 @@ nrow(gr_data)
 nrow(gr_data2)
 
 
-### reporducing linear model
+### reproducing linear model
 gr_data2$sqrtgr <- sqrt(gr_data2$gr)
 gr_data2$logground <- log(gr_data2$ground_max)
 
@@ -65,16 +70,23 @@ model <- lm(sqrtgr ~ logground, data = gr_data2)
 summary(model)
 
 #### getting average wind and temps
-wind_avgs <-  data %>%
+data2 <- data %>%
+  filter(month(date) %in% c(12,1,2))
+
+wind_avgs <-  data2 %>%
   group_by(city_code, season, measurement) %>%
   filter(measurement == "wind") %>%
-  summarise(wind_avg = mean(value))
+  summarise(wind_avg = mean(value), start_date = min(date),
+            end_date = max(date)) %>%
+  filter(month(start_date) != month(end_date))
 
-temp_avgs <-  data %>%
+
+temp_avgs <-  data2 %>%
   group_by(city_code, season, measurement) %>%
   filter(measurement == "temp") %>%
-  summarise(temp_avg = mean(value))
-nrow(wind_avgs)
+  summarise(temp_avg = mean(value), start_date = min(date),
+            end_date = max(date)) %>%
+  filter(month(start_date) != month(end_date))
 nrow(temp_avgs)
 
 gr_data3 <- left_join(gr_data2, wind_avgs, by = c("city_code", "season"))
@@ -106,18 +118,20 @@ summary(model3)
 min(na.omit(gr_all$wind_avg))
 
 ################# other ways to do weather ##################################
-above_freeze <-  data %>%
+above_freeze <-  data2 %>%
   group_by(city_code, measurement, season) %>%
   filter(measurement == "temp") %>%
-  summarise(above_freeze = sum(value > 32)/length(value))
-
+  summarise(above_freeze = sum(value > 32)/length(value), start_date = min(date),
+            end_date = max(date)) %>%
+  filter(month(start_date) != month(end_date))
 
 ### percentage days wind speed is over 10
-winter_wind <-  data %>%
+winter_wind <-  data2 %>%
   group_by(city_code, measurement, season) %>%
   filter(measurement == "wind") %>%
-  summarise(winter_wind = sum(value > 10)/length(value))
-
+  summarise(winter_wind = sum(value > 10)/length(value), start_date = min(date),
+            end_date = max(date)) %>%
+  filter(month(start_date) != month(end_date))
 
 
 
@@ -125,7 +139,10 @@ winter_wind <-  data %>%
 gr_total <- inner_join(gr_all, winter_wind, by = c("city_code", "season")) %>%
   inner_join(above_freeze, by = c("city_code", "season"))
 
-## doing og model with remaining dataprp
+colnames(gr_total)
+gr_total <- gr_total[,c(-11,-12,-15,-16,-37,-38, -41, -42 )]
+
+## doing og model with remaining data
 model1 <- lm(sqrtgr ~ logground, gr_total)
 summary(model1)
 
@@ -477,5 +494,5 @@ plot(log(gr_total$winter_wind),gr_total$sqrtgr,
      ylab = "sqrtgr")
 
 
-write.csv(gr_total[gr_total$gr <= 2,], "C:\\Users\\bean_student\\Documents\\gr_model_data.csv")
+write.csv(gr_total[gr_total$gr <= 2,], "C:\\Users\\bean_student\\Documents\\gr_model_data_2months.csv")
 
