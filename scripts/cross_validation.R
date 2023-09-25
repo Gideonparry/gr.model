@@ -1,4 +1,7 @@
-data <- read.csv("C:\\Users\\bean_student\\Documents\\gr_model_data.csv")
+# Currently working in loadall mode. Make sure Metrics and randomForest are
+# installed
+
+data <- read.csv("data-raw/gr_model_data.csv")
 acc_test(data = data, seed = 123)[1:4]
 acc_test(data = data, seed = 123)[5:8]
 acc_test(data = data, seed = 123)[9:12]
