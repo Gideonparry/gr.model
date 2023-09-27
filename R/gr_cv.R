@@ -17,8 +17,8 @@ gr_cv <- function(train_data, test_data,
                   forumula2 = "sqrtgr ~ logground + roofflat*Exposure +
                   roofflat*winter_wind +
                    log(Size) + temp_avg + Heated + Parapet",
-                  tree_vars = c(7, 11, 13, 19:22, 25:27, 33, 35),
-                  rf_y = "gr"){
+                  rf_formula = gr ~ ground_max + roofflat + Exposure +
+                    winter_wind + Size + temp_avg + Heated + Parapet){
 
 
   # Taking the original model with the specified train and test data
@@ -41,19 +41,18 @@ gr_cv <- function(train_data, test_data,
 
   ## Random Forest model check
 
-  forest_train <- stats::na.omit(train_data[,tree_vars])
-  forest_test <- stats::na.omit(test_data[,tree_vars])
+
 
   ## It works as is, but making this an argument would be better
-  train_rf <- randomForest::randomForest(formula = gr ~ .,
-                           data =forest_train)
-  forest_preds <- stats::predict(train_rf, forest_test)
+  train_rf <- randomForest::randomForest(formula = rf_formula,
+                           data = train_data, na.action = na.omit)
+  forest_preds <- stats::predict(train_rf, test_data)
 
 
 
   ## making a list of vectors of results and names to return
 
-  results <- list(test_data$sqrtgr, test_data$gr, forest_test$gr,
+  results <- list(test_data$sqrtgr, test_data$gr, test_data$gr,
                   original_prediction, lin_pred, og_gr_pred, lin_gr_pred,
                   forest_preds, rep(mean(train_data$gr), length(test_data$gr)))
 

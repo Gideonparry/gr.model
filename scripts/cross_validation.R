@@ -24,9 +24,9 @@ acc_test(data = data, seed = 2319)[13:16]
 
 ## Getting just new results
 acc_test(data = data, seed = 123,
-                  formula2 = "sqrtgr ~ logground + roofflat*Exposure +
+                  formula2 = sqrtgr ~ logground + roofflat*Exposure +
                   roofflat*winter_wind +
-                  log(Size) + temp_avg + Parapet")[c(3,7,11,15)]
+                  log(Size) + temp_avg + Parapet)[c(3,7,11,15)]
 
 acc_test(data = data, seed = 1234,
          formula2 = "sqrtgr ~ logground + roofflat*Exposure +
@@ -104,11 +104,14 @@ acc_test(data = data, seed = 2319,
 colnames(data)
 
 ### rf with weather, exposure and flat
-acc_test(data, 123, tree_vars = c(7,9,13,24,31,33))[c(4,8,12,16)]
+acc_test(data, 123, rf_formula = gr ~ logground + temp_avg + Exposure +
+           roofflat + winter_wind)[c(4,8,12,16)]
 
-acc_test(data, 1234, tree_vars = c(7,9,13,24,31,33))[c(4,8,12,16)]
+acc_test(data, 1234, rf_formula = gr ~ logground + temp_avg + Exposure +
+           roofflat + winter_wind)[c(4,8,12,16)]
 
-acc_test(data, 2319, tree_vars = c(7,9,13,24,31,33))[c(4,8,12,16)]
+acc_test(data, 2319, rf_formula = gr ~ logground + temp_avg + Exposure +
+           roofflat + winter_wind)[c(4,8,12,16)]
 
 
 

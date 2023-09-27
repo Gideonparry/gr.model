@@ -10,8 +10,8 @@ gr_cv(
   formula1 = "sqrtgr ~ logground",
   forumula2 =
     "sqrtgr ~ logground + roofflat*Exposure +\\n                  roofflat*winter_wind +\\n                   log(Size) + temp_avg + Heated + Parapet",
-  tree_vars = c(7, 11, 13, 19:22, 25:27, 33, 35),
-  rf_y = "gr"
+  rf_formula = gr ~ ground_max + roofflat + Exposure + winter_wind + Size + temp_avg +
+    Heated + Parapet
 )
 }
 \arguments{

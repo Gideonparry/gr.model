@@ -10,14 +10,22 @@ acc_test(
   formula1 = "sqrtgr ~ logground",
   formula2 =
     "sqrtgr ~ logground + roofflat*Exposure +\\n                     roofflat*winter_wind +\\n                     log(Size) + temp_avg + Heated + Parapet",
-  tree_vars = c(7, 11, 13, 19:22, 25:27, 33, 35),
-  rf_y = "gr"
+  rf_formula = gr ~ ground_max + roofflat + Exposure + winter_wind + Size + temp_avg +
+    Heated + Parapet
 )
 }
 \arguments{
-\item{train_data}{The training data}
+\item{data}{The full data to perform models on}
 
-\item{test_data}{The testing data}
+\item{seed}{The Random number seed used to partition data}
+
+\item{formula1}{The 1st formula to use. Default is logground}
+
+\item{formula2}{The 2nd fromula to use Returns as "new model"}
+
+\item{tree_vars}{The column numbers of variable to use in the random forest}
+
+\item{rf_y}{A currently failed attempt at making the y variable in rf an agrument}
 }
 \description{
 Takes train and test data and comuptes different models to compare accuracy

@@ -25,8 +25,8 @@ acc_test <- function(data, seed,
                      formula2 = "sqrtgr ~ logground + roofflat*Exposure +
                      roofflat*winter_wind +
                      log(Size) + temp_avg + Heated + Parapet",
-                     tree_vars = c(7, 11, 13, 19:22, 25:27, 33, 35),
-                     rf_y = "gr") {
+                     rf_formula = gr ~ ground_max + roofflat + Exposure +
+                       winter_wind + Size + temp_avg + Heated + Parapet) {
 
   set.seed(seed)
 
@@ -65,28 +65,23 @@ acc_test <- function(data, seed,
   fold1_results <- gr_cv(train_data1, test_data1,
                          formula1 = formula1,
                          forumula2 = formula2,
-                         tree_vars = tree_vars,
-                         rf_y = rf_y)
+                         rf_formula = rf_formula)
   fold2_results <- gr_cv(train_data2, test_data2,
                          formula1 = formula1,
                          forumula2 = formula2,
-                         tree_vars = tree_vars,
-                         rf_y = rf_y)
+                         rf_formula = rf_formula)
   fold3_results <- gr_cv(train_data3, test_data3,
                          formula1 = formula1,
                          forumula2 = formula2,
-                         tree_vars = tree_vars,
-                         rf_y = rf_y)
+                         rf_formula = rf_formula)
   fold4_results <- gr_cv(train_data4, test_data4,
                          formula1 = formula1,
                          forumula2 = formula2,
-                         tree_vars = tree_vars,
-                         rf_y = rf_y)
+                         rf_formula = rf_formula)
   fold5_results <- gr_cv(train_data5, test_data5,
                          formula1 = formula1,
                          forumula2 = formula2,
-                         tree_vars = tree_vars,
-                         rf_y = rf_y)
+                         rf_formula = rf_formula)
 
   sqrt_gr_test <- c(fold1_results[[1]], fold2_results[[1]], fold3_results[[1]],
                     fold4_results[[1]], fold5_results[[1]])
@@ -125,13 +120,16 @@ acc_test <- function(data, seed,
   rmse_og_build <- Metrics::rmse(gr_test, og_gr_preds)
   rmse_new_build <- Metrics::rmse(gr_test[!is.na(new_gr_preds)],
                                  na.omit(new_gr_preds))
-  rmse_rf_build <- Metrics::rmse(rf_gr_test, rf_gr_preds)
+  rmse_rf_build <- Metrics::rmse(rf_gr_test[!is.na(rf_gr_preds)],
+                                 na.omit(rf_gr_preds))
+
 
   mdae_null_build <- stats::median(abs((gr_test - train_avg)))
   mdae_og_build <- stats::median(abs((gr_test - og_gr_preds)))
   mdae_new_build <- stats::median(abs((gr_test[!is.na(new_gr_preds)] -
                                          na.omit(new_gr_preds))))
-  mdae_rf_build <- stats::median(abs((rf_gr_test - rf_gr_preds)))
+  mdae_rf_build <- stats::median(abs((rf_gr_test[!is.na(rf_gr_preds)] -
+                                        na.omit(rf_gr_preds))))
 
 
   # Partitioning based on observations
@@ -155,11 +153,26 @@ acc_test <- function(data, seed,
   obs_test_data5 <- data[obs_nums == 5,]
 
 
-  obs_fold1_results <- gr_cv(obs_train_data1, obs_test_data1)
-  obs_fold2_results <- gr_cv(obs_train_data2, obs_test_data2)
-  obs_fold3_results <- gr_cv(obs_train_data3, obs_test_data3)
-  obs_fold4_results <- gr_cv(obs_train_data4, obs_test_data4)
-  obs_fold5_results <- gr_cv(obs_train_data5, obs_test_data5)
+  obs_fold1_results <- gr_cv(obs_train_data1, obs_test_data1,
+                             formula1 = formula1,
+                             forumula2 = formula2,
+                             rf_formula = rf_formula)
+  obs_fold2_results <- gr_cv(obs_train_data2, obs_test_data2,
+                             formula1 = formula1,
+                             forumula2 = formula2,
+                             rf_formula = rf_formula)
+  obs_fold3_results <- gr_cv(obs_train_data3, obs_test_data3,
+                             formula1 = formula1,
+                             forumula2 = formula2,
+                             rf_formula = rf_formula)
+  obs_fold4_results <- gr_cv(obs_train_data4, obs_test_data4,
+                             formula1 = formula1,
+                             forumula2 = formula2,
+                             rf_formula = rf_formula)
+  obs_fold5_results <- gr_cv(obs_train_data5, obs_test_data5,
+                             formula1 = formula1,
+                             forumula2 = formula2,
+                             rf_formula = rf_formula)
 
   sqrt_gr_test_obs <- c(obs_fold1_results[[1]], obs_fold2_results[[1]],
                         obs_fold3_results[[1]],
@@ -207,13 +220,16 @@ acc_test <- function(data, seed,
   rmse_og_obs <- Metrics::rmse(gr_test_obs, og_gr_preds_obs)
   rmse_new_obs <- Metrics::rmse(gr_test_obs[!is.na(new_gr_preds_obs)],
                                na.omit(new_gr_preds_obs))
-  rmse_rf_obs <- Metrics::rmse(rf_gr_test_obs, rf_gr_preds_obs)
+  rmse_rf_obs <- Metrics::rmse(rf_gr_test_obs[!is.na(rf_gr_preds_obs)],
+                               na.omit(rf_gr_preds_obs))
 
   mdae_null_obs <- stats::median(abs((gr_test_obs - train_avg_obs)))
   mdae_og_obs <- stats::median(abs((gr_test_obs - og_gr_preds_obs)))
   mdae_new_obs <- stats::median(abs((gr_test_obs[!is.na(new_gr_preds_obs)] -
                                        na.omit(new_gr_preds_obs))))
-  mdae_rf_obs <- stats::median(abs((rf_gr_test_obs - rf_gr_preds_obs)))
+  mdae_rf_obs <- stats::median(abs((rf_gr_test_obs[!is.na(rf_gr_preds_obs)] -
+                                      na.omit(rf_gr_preds_obs))))
+
 
   results <- c(rmse_null, rmse_og_build, rmse_new_build, rmse_rf_build,
                mdae_null_build, mdae_og_build, mdae_new_build, mdae_rf_build,
