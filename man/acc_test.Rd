@@ -23,9 +23,7 @@ acc_test(
 
 \item{formula2}{The 2nd fromula to use Returns as "new model"}
 
-\item{tree_vars}{The column numbers of variable to use in the random forest}
-
-\item{rf_y}{A currently failed attempt at making the y variable in rf an agrument}
+\item{rf_formula}{The formula to use for the random forest}
 }
 \description{
 Takes train and test data and comuptes different models to compare accuracy

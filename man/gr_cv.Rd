@@ -18,6 +18,12 @@ gr_cv(
 \item{train_data}{The training data}
 
 \item{test_data}{The testing data}
+
+\item{formula1}{The 1st formula to use. Default is logground}
+
+\item{rf_formula}{The formula to use for the random forest}
+
+\item{formula2}{The 2nd fromula to use Returns as "new model"}
 }
 \description{
 Takes train and test data and comuptes different models to compare accuracy

@@ -5,6 +5,9 @@
 #'
 #' @param train_data The training data
 #' @param test_data The testing data
+#' @param formula1 The 1st formula to use. Default is logground
+#' @param formula2 The 2nd fromula to use Returns as "new model"
+#' @param rf_formula The formula to use for the random forest
 #'
 #'
 #' @import Metrics

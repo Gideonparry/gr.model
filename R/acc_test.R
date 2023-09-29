@@ -7,8 +7,7 @@
 #' @param seed The Random number seed used to partition data
 #' @param formula1 The 1st formula to use. Default is logground
 #' @param formula2 The 2nd fromula to use Returns as "new model"
-#' @param tree_vars The column numbers of variable to use in the random forest
-#' @param rf_y A currently failed attempt at making the y variable in rf an agrument
+#' @param rf_formula The formula to use for the random forest
 #'
 #'
 #' @import Metrics
