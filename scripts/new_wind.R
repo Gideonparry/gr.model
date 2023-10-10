@@ -37,37 +37,18 @@ library(lubridate)
 library(tidyr)
 library(zoo)
 
-# Function to add missing dates for each unique building_code and season combination
-
-
-# Group the data by building_code and season, and apply the function to each group
-result_list <- data %>%
-  dplyr::group_by(building_code, season) %>%
-  dplyr::filter(measurement == "ground") %>%
-  dplyr::do(add_missing_dates(.))
-
-# Combine the result list into a single data frame
-final_result_df <- bind_rows(result_list)
-
-final_result_df$measurement = "ground"
-final_result_df$city_code <- na.locf(final_result_df$city_code)
-final_result_df$building_code <- na.locf(final_result_df$building_code)
-final_result_df$season <- na.locf(final_result_df$season)
-final_result_df$value <- linear_impute(final_result_df$value)
 
 ground_max <- data %>%
-  group_by(building_code, city_code, season) %>%
-  filter(measurement == "ground")
+  dplyr::group_by(building_code, city_code, season) %>%
+  dplyr::filter(measurement == "ground") %>%
+  dplyr::summarise(ground_max = max(value))
 
-date_range <- seq(min(ground_max$date), max(ground_max$date), by = "days")
-all_dates <- data.frame(date = date_range)
-result_df <- all_dates %>%
-  left_join(ground_max, by = "date")
+
 
 roof_max <- data %>%
-  group_by(building_code, city_code, season) %>%
-  filter(mma == "avg") %>%
-  summarise(roof_max = max(value))
+  dplyr::group_by(building_code, city_code, season) %>%
+  dplyr::filter(mma == "avg") %>%
+  dplyr::summarise(roof_max = max(value))
 
 gr_data <- inner_join(ground_max, roof_max, by = c("building_code", "city_code",
                                                    "season"))
@@ -79,7 +60,7 @@ gr_data$gr <- gr_data$roof_max / gr_data$ground_max
 arch_hangars <- c("clab02", "cxbc02", "nbon02", "oton07", "wnmb04")
 
 gr_data2 <- gr_data %>%
-  filter(!(building_code %in% arch_hangars))
+  dplyr::filter(!(building_code %in% arch_hangars))
 nrow(gr_data)
 nrow(gr_data2)
 
@@ -92,23 +73,21 @@ model <- lm(sqrtgr ~ logground, data = gr_data2)
 summary(model)
 
 #### getting average wind and temps
-data2 <- data %>%
-  filter(month(date) %in% c(12,1,2))
 
-wind_avgs <-  data2 %>%
-  group_by(city_code, season, measurement) %>%
-  filter(measurement == "wind") %>%
-  summarise(wind_avg = mean(value), start_date = min(date),
+wind_avgs <-  data %>%
+  dplyr::group_by(city_code, season, measurement) %>%
+  dplyr::filter(measurement == "wind") %>%
+  dplyr::summarise(wind_avg = mean(value), start_date = min(date),
             end_date = max(date)) %>%
-  filter(month(start_date) != month(end_date))
+  dplyr::filter(month(start_date) != month(end_date))
 
 
-temp_avgs <-  data2 %>%
-  group_by(city_code, season, measurement) %>%
-  filter(measurement == "temp") %>%
-  summarise(temp_avg = mean(value), start_date = min(date),
+temp_avgs <-  data %>%
+  dplyr::group_by(city_code, season, measurement) %>%
+  dplyr::filter(measurement == "temp") %>%
+  dplyr::summarise(temp_avg = mean(value), start_date = min(date),
             end_date = max(date)) %>%
-  filter(month(start_date) != month(end_date))
+  dplyr::filter(month(start_date) != month(end_date))
 nrow(temp_avgs)
 
 gr_data3 <- left_join(gr_data2, wind_avgs, by = c("city_code", "season"))
@@ -141,28 +120,55 @@ min(na.omit(gr_all$wind_avg))
 
 ################# other ways to do weather ##################################
 above_freeze <-  data2 %>%
-  group_by(city_code, measurement, season) %>%
-  filter(measurement == "temp") %>%
-  summarise(above_freeze = sum(value > 32)/length(value), start_date = min(date),
+  dplyr::group_by(city_code, measurement, season) %>%
+  dplyr::filter(measurement == "temp") %>%
+  dplyr::summarise(above_freeze = sum(value > 32)/length(value), start_date = min(date),
             end_date = max(date)) %>%
-  filter(month(start_date) != month(end_date))
+  dplyr::filter(month(start_date) != month(end_date))
 
-### percentage days wind speed is over 10
-winter_wind <-  data2 %>%
-  group_by(city_code, measurement, season) %>%
-  filter(measurement == "wind") %>%
-  summarise(winter_wind = sum(value > 10)/length(value), start_date = min(date),
-            end_date = max(date)) %>%
-  filter(month(start_date) != month(end_date))
+# Group the data by building_code and season, and apply the function to each group
+result_list <- data2 %>%
+  dplyr::group_by(building_code, season) %>%
+  dplyr::filter(measurement == "ground") %>%
+  dplyr::do(add_missing_dates(.))
+
+# Combine the result list into a single data frame
+final_result_df <- bind_rows(result_list)
+
+final_result_df$measurement = "ground"
+final_result_df$city_code <- na.locf(final_result_df$city_code)
+final_result_df$building_code <- na.locf(final_result_df$building_code)
+final_result_df$season <- na.locf(final_result_df$season)
+final_result_df$value <- linear_impute(final_result_df$value)
+
+
+winter_wind <- data2 %>%
+  dplyr::group_by(city_code, date) %>%
+  dplyr::filter(measurement == "wind") %>%
+  dplyr::summarise(wind_val = mean(value)) %>%
+  dplyr::inner_join(final_result_df, by =  c("city_code", "date")) %>%
+  dplyr::mutate(snow = ifelse(value > 1, 1, 0)) %>%
+  dplyr::group_by(building_code, season) %>%
+  dplyr::summarise(winter_wind = sum(wind_val > 10 & snow == 1)/sum(snow == 1),
+                   start_date = min(date),
+                   end_date = max(date))
 
 
 
 
-gr_total <- inner_join(gr_all, winter_wind, by = c("city_code", "season")) %>%
+
+
+View(winter_wind)
+
+
+
+
+
+gr_total <- inner_join(gr_all, winter_wind, by = c("building_code", "season")) %>%
   inner_join(above_freeze, by = c("city_code", "season"))
 
 colnames(gr_total)
-gr_total <- gr_total[,c(-11,-12,-15,-16,-37,-38, -41, -42 )]
+gr_total <- gr_total[,c(-11,-12,-15,-16,-36,-37, -40, -41 )]
 
 ## doing og model with remaining data
 model1 <- lm(sqrtgr ~ logground, gr_total)
@@ -191,7 +197,7 @@ summary(model7)
 # adjusted R^2 0.05321
 
 
-resid_data <- gr_total[,c(10, 12, 19:21, 23:26, 28:30, 32, 34:35)]
+resid_data <- gr_total[,c(10, 12, 19:21, 23:26, 28:30, 31, 33:34)]
 
 resid_no_na <- na.omit(resid_data)
 
@@ -221,7 +227,7 @@ pruned_tree <- prune(tree, cp = 0.1)
 prp(pruned_tree)
 ## looking at transformations
 
-gr_vars <- gr_total[,c(7,8,30,23,32,28,20,24)]
+gr_vars <- gr_total[,c(7,8,30,23,31,28,20,24)]
 pairs(gr_vars)
 par(mfrow = c(2, 2))
 plot(gr_vars$sqrtgr,(gr_vars$winter_wind))
@@ -516,5 +522,5 @@ plot(log(gr_total$winter_wind),gr_total$sqrtgr,
      ylab = "sqrtgr")
 
 
-write.csv(gr_total[gr_total$gr <= 2,], "C:\\Users\\bean_student\\Documents\\gr_model_data_2months.csv")
+write.csv(gr_total[gr_total$gr <= 2,], "D:\\gr_model_data_new_wind.csv")
 

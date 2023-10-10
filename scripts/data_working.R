@@ -38,13 +38,13 @@ library(lubridate)
 
 ground_max <- data %>%
   group_by(building_code, city_code, season) %>%
-  filter(measurement == "ground") %>%
+  dplyr::filter(measurement == "ground") %>%
   summarise(ground_max = max(value))
 
 
 roof_max <- data %>%
   group_by(building_code, city_code, season) %>%
-  filter(mma == "avg") %>%
+  dplyr::filter(mma == "avg") %>%
   summarise(roof_max = max(value))
 
 gr_data <- inner_join(ground_max, roof_max, by = c("building_code", "city_code",
@@ -53,11 +53,11 @@ gr_data$gr <- gr_data$roof_max / gr_data$ground_max
 
 
 
-### filtering out the arch hangars
+### dplyr::filtering out the arch hangars
 arch_hangars <- c("clab02", "cxbc02", "nbon02", "oton07", "wnmb04")
 
 gr_data2 <- gr_data %>%
-  filter(!(building_code %in% arch_hangars))
+  dplyr::filter(!(building_code %in% arch_hangars))
 nrow(gr_data)
 nrow(gr_data2)
 
@@ -71,22 +71,22 @@ summary(model)
 
 #### getting average wind and temps
 data2 <- data %>%
-  filter(month(date) %in% c(12,1,2))
+  dplyr::filter(month(date) %in% c(12,1,2))
 
 wind_avgs <-  data2 %>%
   group_by(city_code, season, measurement) %>%
-  filter(measurement == "wind") %>%
+  dplyr::filter(measurement == "wind") %>%
   summarise(wind_avg = mean(value), start_date = min(date),
             end_date = max(date)) %>%
-  filter(month(start_date) != month(end_date))
+  dplyr::filter(month(start_date) != month(end_date))
 
 
 temp_avgs <-  data2 %>%
   group_by(city_code, season, measurement) %>%
-  filter(measurement == "temp") %>%
+  dplyr::filter(measurement == "temp") %>%
   summarise(temp_avg = mean(value), start_date = min(date),
             end_date = max(date)) %>%
-  filter(month(start_date) != month(end_date))
+  dplyr::filter(month(start_date) != month(end_date))
 nrow(temp_avgs)
 
 gr_data3 <- left_join(gr_data2, wind_avgs, by = c("city_code", "season"))
@@ -120,18 +120,18 @@ min(na.omit(gr_all$wind_avg))
 ################# other ways to do weather ##################################
 above_freeze <-  data2 %>%
   group_by(city_code, measurement, season) %>%
-  filter(measurement == "temp") %>%
+  dplyr::filter(measurement == "temp") %>%
   summarise(above_freeze = sum(value > 32)/length(value), start_date = min(date),
             end_date = max(date)) %>%
-  filter(month(start_date) != month(end_date))
+  dplyr::filter(month(start_date) != month(end_date))
 
 ### percentage days wind speed is over 10
 winter_wind <-  data2 %>%
   group_by(city_code, measurement, season) %>%
-  filter(measurement == "wind") %>%
+  dplyr::filter(measurement == "wind") %>%
   summarise(winter_wind = sum(value > 10)/length(value), start_date = min(date),
             end_date = max(date)) %>%
-  filter(month(start_date) != month(end_date))
+  dplyr::filter(month(start_date) != month(end_date))
 
 
 
