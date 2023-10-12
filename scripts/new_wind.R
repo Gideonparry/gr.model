@@ -522,5 +522,5 @@ plot(log(gr_total$winter_wind),gr_total$sqrtgr,
      ylab = "sqrtgr")
 
 
-write.csv(gr_total[gr_total$gr <= 2,], "D:\\gr_model_data_new_wind.csv")
+write.csv(gr_total[gr_total$gr <= 2,], "data-raw//gr_model_data_groundsnow.csv")
 
