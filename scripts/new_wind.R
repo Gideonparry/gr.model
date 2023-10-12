@@ -119,7 +119,7 @@ summary(model3)
 min(na.omit(gr_all$wind_avg))
 
 ################# other ways to do weather ##################################
-above_freeze <-  data2 %>%
+above_freeze <-  data %>%
   dplyr::group_by(city_code, measurement, season) %>%
   dplyr::filter(measurement == "temp") %>%
   dplyr::summarise(above_freeze = sum(value > 32)/length(value), start_date = min(date),
@@ -127,7 +127,7 @@ above_freeze <-  data2 %>%
   dplyr::filter(month(start_date) != month(end_date))
 
 # Group the data by building_code and season, and apply the function to each group
-result_list <- data2 %>%
+result_list <- data %>%
   dplyr::group_by(building_code, season) %>%
   dplyr::filter(measurement == "ground") %>%
   dplyr::do(add_missing_dates(.))
@@ -142,7 +142,7 @@ final_result_df$season <- na.locf(final_result_df$season)
 final_result_df$value <- linear_impute(final_result_df$value)
 
 
-winter_wind <- data2 %>%
+winter_wind <- data %>%
   dplyr::group_by(city_code, date) %>%
   dplyr::filter(measurement == "wind") %>%
   dplyr::summarise(wind_val = mean(value)) %>%
