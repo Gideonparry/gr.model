@@ -47,15 +47,14 @@ acc_test <- function(data, k = 5,
 
   sqrt_gr_test <- unlist(lapply(fold_results, function(sub_list) sub_list[[1]]))
   gr_test <- unlist(lapply(fold_results, function(sub_list) sub_list[[2]]))
-  rf_gr_test <- unlist(lapply(fold_results, function(sub_list) sub_list[[3]]))
   og_sqrt_preds <- unlist(lapply(fold_results,
-                                 function(sub_list) sub_list[[4]]))
+                                 function(sub_list) sub_list[[3]]))
   new_sqrt_preds <- unlist(lapply(fold_results,
-                                  function(sub_list) sub_list[[5]]))
-  og_gr_preds <- unlist(lapply(fold_results, function(sub_list) sub_list[[6]]))
-  new_gr_preds <- unlist(lapply(fold_results, function(sub_list) sub_list[[7]]))
-  rf_gr_preds <- unlist(lapply(fold_results, function(sub_list) sub_list[[8]]))
-  train_avg <- unlist(lapply(fold_results, function(sub_list) sub_list[[9]]))
+                                  function(sub_list) sub_list[[4]]))
+  og_gr_preds <- unlist(lapply(fold_results, function(sub_list) sub_list[[5]]))
+  new_gr_preds <- unlist(lapply(fold_results, function(sub_list) sub_list[[6]]))
+  rf_gr_preds <- unlist(lapply(fold_results, function(sub_list) sub_list[[7]]))
+  train_avg <- unlist(lapply(fold_results, function(sub_list) sub_list[[8]]))
 
   # rmse(sqrt_gr_test, og_sqrt_preds)
   #rmse(sqrt_gr_test[!is.na(new_sqrt_preds)], na.omit(new_sqrt_preds))
@@ -67,7 +66,7 @@ acc_test <- function(data, k = 5,
   rmse_og_build <- Metrics::rmse(gr_test, og_gr_preds)
   rmse_new_build <- Metrics::rmse(gr_test[!is.na(new_gr_preds)],
                                  na.omit(new_gr_preds))
-  rmse_rf_build <- Metrics::rmse(rf_gr_test[!is.na(rf_gr_preds)],
+  rmse_rf_build <- Metrics::rmse(gr_test[!is.na(rf_gr_preds)],
                                  na.omit(rf_gr_preds))
 
 
@@ -75,7 +74,7 @@ acc_test <- function(data, k = 5,
   mdae_og_build <- stats::median(abs((gr_test - og_gr_preds)))
   mdae_new_build <- stats::median(abs((gr_test[!is.na(new_gr_preds)] -
                                          na.omit(new_gr_preds))))
-  mdae_rf_build <- stats::median(abs((rf_gr_test[!is.na(rf_gr_preds)] -
+  mdae_rf_build <- stats::median(abs((gr_test[!is.na(rf_gr_preds)] -
                                         na.omit(rf_gr_preds))))
 
 
@@ -99,20 +98,18 @@ acc_test <- function(data, k = 5,
                                     function(sub_list) sub_list[[1]]))
   gr_test_obs <- unlist(lapply(obs_fold_results,
                                function(sub_list) sub_list[[2]]))
-  rf_gr_test_obs <- unlist(lapply(obs_fold_results,
-                                  function(sub_list) sub_list[[3]]))
   og_sqrt_preds_obs <- unlist(lapply(obs_fold_results,
-                                     function(sub_list) sub_list[[4]]))
+                                     function(sub_list) sub_list[[3]]))
   new_sqrt_preds_obs <- unlist(lapply(obs_fold_results,
-                                      function(sub_list) sub_list[[5]]))
+                                      function(sub_list) sub_list[[4]]))
   og_gr_preds_obs <- unlist(lapply(obs_fold_results,
-                                   function(sub_list) sub_list[[6]]))
+                                   function(sub_list) sub_list[[5]]))
   new_gr_preds_obs <- unlist(lapply(obs_fold_results,
-                                    function(sub_list) sub_list[[7]]))
+                                    function(sub_list) sub_list[[6]]))
   rf_gr_preds_obs <- unlist(lapply(obs_fold_results,
-                                   function(sub_list) sub_list[[8]]))
+                                   function(sub_list) sub_list[[7]]))
   train_avg_obs <- unlist(lapply(obs_fold_results,
-                                 function(sub_list) sub_list[[9]]))
+                                 function(sub_list) sub_list[[8]]))
 
 
 
@@ -127,14 +124,14 @@ acc_test <- function(data, k = 5,
   rmse_og_obs <- Metrics::rmse(gr_test_obs, og_gr_preds_obs)
   rmse_new_obs <- Metrics::rmse(gr_test_obs[!is.na(new_gr_preds_obs)],
                                na.omit(new_gr_preds_obs))
-  rmse_rf_obs <- Metrics::rmse(rf_gr_test_obs[!is.na(rf_gr_preds_obs)],
+  rmse_rf_obs <- Metrics::rmse(gr_test_obs[!is.na(rf_gr_preds_obs)],
                                na.omit(rf_gr_preds_obs))
 
   mdae_null_obs <- stats::median(abs((gr_test_obs - train_avg_obs)))
   mdae_og_obs <- stats::median(abs((gr_test_obs - og_gr_preds_obs)))
   mdae_new_obs <- stats::median(abs((gr_test_obs[!is.na(new_gr_preds_obs)] -
                                        na.omit(new_gr_preds_obs))))
-  mdae_rf_obs <- stats::median(abs((rf_gr_test_obs[!is.na(rf_gr_preds_obs)] -
+  mdae_rf_obs <- stats::median(abs((gr_test_obs[!is.na(rf_gr_preds_obs)] -
                                       na.omit(rf_gr_preds_obs))))
 
 

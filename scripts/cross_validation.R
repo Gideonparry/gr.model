@@ -2,7 +2,7 @@
 # installed
 
 data <- read.csv("data-raw/gr_model_data.csv")
-set.seed(1234)
+set.seed(123)
 acc_test(data = data)[1:4]
 acc_test(data = data, seed = 123)[5:8]
 acc_test(data = data, seed = 123)[9:12]
