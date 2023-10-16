@@ -6,7 +6,7 @@
 \usage{
 acc_test(
   data,
-  seed,
+  k = 5,
   formula1 = "sqrtgr ~ logground",
   formula2 =
     "sqrtgr ~ logground + roofflat*Exposure +\\n                     roofflat*winter_wind +\\n                     log(Size) + temp_avg + Heated + Parapet",
@@ -17,13 +17,13 @@ acc_test(
 \arguments{
 \item{data}{The full data to perform models on}
 
-\item{seed}{The Random number seed used to partition data}
-
 \item{formula1}{The 1st formula to use. Default is logground}
 
 \item{formula2}{The 2nd fromula to use Returns as "new model"}
 
 \item{rf_formula}{The formula to use for the random forest}
+
+\item{seed}{The Random number seed used to partition data}
 }
 \description{
 Takes train and test data and comuptes different models to compare accuracy

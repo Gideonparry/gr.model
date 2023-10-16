@@ -19,7 +19,7 @@
 
 
 
-acc_test <- function(data, seed,
+acc_test <- function(data, k = 5,
                      formula1 = "sqrtgr ~ logground",
                      formula2 = "sqrtgr ~ logground + roofflat*Exposure +
                      roofflat*winter_wind +
@@ -27,87 +27,35 @@ acc_test <- function(data, seed,
                      rf_formula = gr ~ ground_max + roofflat + Exposure +
                        winter_wind + Size + temp_avg + Heated + Parapet) {
 
-  set.seed(seed)
-
-
-  ## setting each building as being in fold 1-5
-  building_nums <- sample(rep_len(1:5,length(unique(data$building_code))))
-
+  ## setting each building as being in fold 1-k
+  building_nums <- sample(rep_len(seq_len(k),
+                                  length(unique(data$building_code))))
 
   # putting numbers to building codes
-  test_build1 <- unique(data$building_code)[building_nums == 1]
-  test_build2 <- unique(data$building_code)[building_nums == 2]
-  test_build3 <- unique(data$building_code)[building_nums == 2]
-  test_build4 <- unique(data$building_code)[building_nums == 4]
-  test_build5 <- unique(data$building_code)[building_nums == 5]
+  test_build <- train_data <- test_data <-
+    fold_results <- vector("list", k)
+  for(i in seq_len(k)){
+    test_build[[i]] <- unique(data$building_code)[building_nums == i]
+    train_data[[i]] <- data[!(data$building_code %in% test_build[[i]]),]
+    test_data[[i]] <- data[data$building_code %in% test_build[[i]],]
+    fold_results[[i]] <- gr_cv(train_data[[i]], test_data[[i]],
+                               formula1 = formula1,
+                               forumula2 = formula2,
+                               rf_formula = rf_formula)
+  }
 
 
-  ## making train and test data based on each fold
-  train_data1 <- data[!(data$building_code %in% test_build1),]
-  test_data1 <- data[data$building_code %in% test_build1,]
-
-  train_data2 <- data[!(data$building_code %in% test_build2),]
-  test_data2 <- data[data$building_code %in% test_build2,]
-
-  train_data3 <- data[!(data$building_code %in% test_build3),]
-  test_data3 <- data[data$building_code %in% test_build3,]
-
-  train_data4 <- data[!(data$building_code %in% test_build4),]
-  test_data4 <- data[data$building_code %in% test_build4,]
-
-  train_data5 <- data[!(data$building_code %in% test_build5),]
-  test_data5 <- data[data$building_code %in% test_build5,]
-
-
-
-
-  fold1_results <- gr_cv(train_data1, test_data1,
-                         formula1 = formula1,
-                         forumula2 = formula2,
-                         rf_formula = rf_formula)
-  fold2_results <- gr_cv(train_data2, test_data2,
-                         formula1 = formula1,
-                         forumula2 = formula2,
-                         rf_formula = rf_formula)
-  fold3_results <- gr_cv(train_data3, test_data3,
-                         formula1 = formula1,
-                         forumula2 = formula2,
-                         rf_formula = rf_formula)
-  fold4_results <- gr_cv(train_data4, test_data4,
-                         formula1 = formula1,
-                         forumula2 = formula2,
-                         rf_formula = rf_formula)
-  fold5_results <- gr_cv(train_data5, test_data5,
-                         formula1 = formula1,
-                         forumula2 = formula2,
-                         rf_formula = rf_formula)
-
-  sqrt_gr_test <- c(fold1_results[[1]], fold2_results[[1]], fold3_results[[1]],
-                    fold4_results[[1]], fold5_results[[1]])
-
-  gr_test <- c(fold1_results[[2]], fold2_results[[2]], fold3_results[[2]],
-               fold4_results[[2]], fold5_results[[2]])
-
-  rf_gr_test <- c(fold1_results[[3]], fold2_results[[3]], fold3_results[[3]],
-                  fold4_results[[3]], fold5_results[[3]])
-
-  og_sqrt_preds <- c(fold1_results[[4]], fold2_results[[4]], fold3_results[[4]],
-                     fold4_results[[4]], fold5_results[[4]])
-
-  new_sqrt_preds <- c(fold1_results[[5]], fold2_results[[5]], fold3_results[[5]],
-                      fold4_results[[5]], fold5_results[[5]])
-
-  og_gr_preds <- c(fold1_results[[6]], fold2_results[[6]], fold3_results[[6]],
-                   fold4_results[[6]], fold5_results[[6]])
-
-  new_gr_preds <- c(fold1_results[[7]], fold2_results[[7]], fold3_results[[7]],
-                    fold4_results[[7]], fold5_results[[7]])
-
-  rf_gr_preds <- c(fold1_results[[8]], fold2_results[[8]], fold3_results[[8]],
-                   fold4_results[[8]], fold5_results[[8]])
-
-  train_avg <- c(fold1_results[[9]], fold2_results[[9]], fold3_results[[9]],
-                   fold4_results[[9]], fold5_results[[9]])
+  sqrt_gr_test <- unlist(lapply(fold_results, function(sub_list) sub_list[[1]]))
+  gr_test <- unlist(lapply(fold_results, function(sub_list) sub_list[[2]]))
+  rf_gr_test <- unlist(lapply(fold_results, function(sub_list) sub_list[[3]]))
+  og_sqrt_preds <- unlist(lapply(fold_results,
+                                 function(sub_list) sub_list[[4]]))
+  new_sqrt_preds <- unlist(lapply(fold_results,
+                                  function(sub_list) sub_list[[5]]))
+  og_gr_preds <- unlist(lapply(fold_results, function(sub_list) sub_list[[6]]))
+  new_gr_preds <- unlist(lapply(fold_results, function(sub_list) sub_list[[7]]))
+  rf_gr_preds <- unlist(lapply(fold_results, function(sub_list) sub_list[[8]]))
+  train_avg <- unlist(lapply(fold_results, function(sub_list) sub_list[[9]]))
 
   # rmse(sqrt_gr_test, og_sqrt_preds)
   #rmse(sqrt_gr_test[!is.na(new_sqrt_preds)], na.omit(new_sqrt_preds))
@@ -134,81 +82,41 @@ acc_test <- function(data, seed,
   # Partitioning based on observations
 
   ## setting each observation as being in fold 1-5
-  obs_nums <- sample(rep_len(1:5,nrow(data)))
-
-  obs_train_data1 <- data[obs_nums != 1,]
-  obs_test_data1 <- data[obs_nums == 1,]
-
-  obs_train_data2 <- data[obs_nums != 2,]
-  obs_test_data2 <- data[obs_nums == 2,]
-
-  obs_train_data3 <- data[obs_nums != 3,]
-  obs_test_data3 <- data[obs_nums == 3,]
-
-  obs_train_data4 <- data[obs_nums != 4,]
-  obs_test_data4 <- data[obs_nums == 4,]
-
-  obs_train_data5 <- data[obs_nums != 5,]
-  obs_test_data5 <- data[obs_nums == 5,]
+  obs_nums <- sample(rep_len(seq_len(k),nrow(data)))
 
 
-  obs_fold1_results <- gr_cv(obs_train_data1, obs_test_data1,
-                             formula1 = formula1,
-                             forumula2 = formula2,
-                             rf_formula = rf_formula)
-  obs_fold2_results <- gr_cv(obs_train_data2, obs_test_data2,
-                             formula1 = formula1,
-                             forumula2 = formula2,
-                             rf_formula = rf_formula)
-  obs_fold3_results <- gr_cv(obs_train_data3, obs_test_data3,
-                             formula1 = formula1,
-                             forumula2 = formula2,
-                             rf_formula = rf_formula)
-  obs_fold4_results <- gr_cv(obs_train_data4, obs_test_data4,
-                             formula1 = formula1,
-                             forumula2 = formula2,
-                             rf_formula = rf_formula)
-  obs_fold5_results <- gr_cv(obs_train_data5, obs_test_data5,
-                             formula1 = formula1,
-                             forumula2 = formula2,
-                             rf_formula = rf_formula)
+  test_obs <- obs_train_data <- obs_test_data <-
+    obs_fold_results <- vector("list", k)
+  for(i in seq_len(k)){
+    obs_train_data[[i]] <- data[obs_nums != i,]
+    obs_test_data[[i]] <- data[obs_nums == i,]
+    obs_fold_results[[i]] <- gr_cv(obs_train_data[[i]], obs_test_data[[i]],
+                                   formula1 = formula1,
+                                   forumula2 = formula2,
+                                   rf_formula = rf_formula)
 
-  sqrt_gr_test_obs <- c(obs_fold1_results[[1]], obs_fold2_results[[1]],
-                        obs_fold3_results[[1]],
-                        obs_fold4_results[[1]], obs_fold5_results[[1]])
+  sqrt_gr_test_obs <- unlist(lapply(obs_fold_results,
+                                    function(sub_list) sub_list[[1]]))
+  gr_test_obs <- unlist(lapply(obs_fold_results,
+                               function(sub_list) sub_list[[2]]))
+  rf_gr_test_obs <- unlist(lapply(obs_fold_results,
+                                  function(sub_list) sub_list[[3]]))
+  og_sqrt_preds_obs <- unlist(lapply(obs_fold_results,
+                                     function(sub_list) sub_list[[4]]))
+  new_sqrt_preds_obs <- unlist(lapply(obs_fold_results,
+                                      function(sub_list) sub_list[[5]]))
+  og_gr_preds_obs <- unlist(lapply(obs_fold_results,
+                                   function(sub_list) sub_list[[6]]))
+  new_gr_preds_obs <- unlist(lapply(obs_fold_results,
+                                    function(sub_list) sub_list[[7]]))
+  rf_gr_preds_obs <- unlist(lapply(obs_fold_results,
+                                   function(sub_list) sub_list[[8]]))
+  train_avg_obs <- unlist(lapply(obs_fold_results,
+                                 function(sub_list) sub_list[[9]]))
 
-  gr_test_obs <- c(obs_fold1_results[[2]], obs_fold2_results[[2]],
-                   obs_fold3_results[[2]],
-                   obs_fold4_results[[2]], obs_fold5_results[[2]])
 
-  rf_gr_test_obs <- c(obs_fold1_results[[3]], obs_fold2_results[[3]],
-                      obs_fold3_results[[3]],
-                      obs_fold4_results[[3]], obs_fold5_results[[3]])
 
-  og_sqrt_preds_obs <- c(obs_fold1_results[[4]], obs_fold2_results[[4]],
-                         obs_fold3_results[[4]],
-                         obs_fold4_results[[4]], obs_fold5_results[[4]])
-
-  new_sqrt_preds_obs <- c(obs_fold1_results[[5]], obs_fold2_results[[5]],
-                          obs_fold3_results[[5]],
-                          obs_fold4_results[[5]], obs_fold5_results[[5]])
-
-  og_gr_preds_obs <- c(obs_fold1_results[[6]], obs_fold2_results[[6]],
-                       obs_fold3_results[[6]],
-                       obs_fold4_results[[6]], obs_fold5_results[[6]])
-
-  new_gr_preds_obs <- c(obs_fold1_results[[7]], obs_fold2_results[[7]],
-                        obs_fold3_results[[7]],
-                        obs_fold4_results[[7]], obs_fold5_results[[7]])
-
-  rf_gr_preds_obs <- c(obs_fold1_results[[8]], obs_fold2_results[[8]],
-                       obs_fold3_results[[8]],
-                       obs_fold4_results[[8]], obs_fold5_results[[8]])
-
-  train_avg_obs <- c(obs_fold1_results[[9]], obs_fold2_results[[9]],
-                       obs_fold3_results[[9]],
-                       obs_fold4_results[[9]], obs_fold5_results[[9]])
-
+  }
   #rmse(sqrt_gr_test, og_sqrt_preds)
   #rmse(sqrt_gr_test[!is.na(new_sqrt_preds)], na.omit(new_sqrt_preds))
 
