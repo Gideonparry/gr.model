@@ -9,8 +9,6 @@
 #' @param formula2 The 2nd fromula to use Returns as "new model"
 #' @param rf_formula The formula to use for the random forest
 #'
-#'
-#' @import Metrics
 #' @import randomForest
 #' @import stats
 
@@ -49,8 +47,8 @@ acc_test <- function(data, k = 5,
   rmse_buildings <- c()
   for(i in seq_len(4)){
     rmse_buildings[i] <-
-      Metrics::rmse(results_builings[[2]][!is.na(results_builings[[i+4]])],
-                                       na.omit(results_builings[[i+4]]))
+      sqrt(mean((results_builings[[2]][!is.na(results_builings[[i+4]])] -
+                                       na.omit(results_builings[[i+4]]))^2))
   }
 
   mdae_buildings <- c()
@@ -83,8 +81,8 @@ acc_test <- function(data, k = 5,
   rmse_obs <- c()
   for(i in seq_len(4)){
     rmse_obs[i] <-
-      Metrics::rmse(results_obs[[2]][!is.na(results_obs[[i+4]])],
-                    na.omit(results_obs[[i+4]]))
+      sqrt(mean((results_obs[[2]][!is.na(results_obs[[i+4]])] -
+                    na.omit(results_obs[[i+4]]))^2))
   }
 
 
