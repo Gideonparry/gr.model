@@ -43,7 +43,6 @@ acc_test <- function(data, k = 5,
       unlist(lapply(fold_results, function(sub_list) sub_list[[i]]))
   }
 
-
   rmse_buildings <- c()
   for(i in seq_len(4)){
     rmse_buildings[i] <-
@@ -71,7 +70,6 @@ acc_test <- function(data, k = 5,
                                    rf_formula = rf_formula)
   }
 
-
   results_obs <- list()
   for (i in 1:8){
     results_obs[[i]] <-
@@ -85,14 +83,12 @@ acc_test <- function(data, k = 5,
                     na.omit(results_obs[[i+4]]))^2))
   }
 
-
   mdae_obs <- c()
   for(i in seq_len(4)){
     mdae_obs[i] <-
       stats::median(abs((results_obs[[2]][!is.na(results_obs[[i+4]])] -
                          na.omit(results_obs[[i+4]]))))
   }
-
 
   results <- rbind(rmse_buildings, mdae_buildings, rmse_obs, mdae_obs)
   colnames(results) <- c("null model", "original model", "new model",

@@ -2,12 +2,19 @@
 # installed
 
 data <- read.csv("data-raw/gr_model_data.csv")
-set.seed(123)
-acc_test(data = data)
-acc_test(data = data, seed = 123)[5:8]
-acc_test(data = data, seed = 123)[9:12]
-acc_test(data = data, seed = 123)[13:16]
+data2 <- read.csv("data-raw/gr_model_data_2months.csv")
+data3 <- read.csv("data-raw/gr_model_data_groundsnow.csv")
+data4 <- read.csv("data-raw/all_wind_agg.csv")
+data5 <- read.csv("data-raw/wind_3month_agg.csv")
+data6 <- read.csv("data-raw/wind_snow_agg.csv")
 
+set.seed(1234)
+acc_test(data = data)
+acc_test(data = data2)
+acc_test(data = data3)
+acc_test(data = data4)
+acc_test(data = data5)
+acc_test(data = data6)
 
 
 acc_test(data = data, seed = 1234)[1:4]
