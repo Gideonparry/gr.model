@@ -24,3 +24,4 @@ winter_wind_grid <- function(file, var1 = "u10", var2 = "v10") {
   winter_wind
 }
 
+
