@@ -123,9 +123,9 @@ above_freeze <-  data %>%
 
 ### percentage days wind speed is over 10
 winter_wind <-  data %>%
-  group_by(city_code, measurement) %>%
+  dplyr::group_by(city_code, measurement) %>%
   dplyr::filter(measurement == "wind") %>%
-  summarise(winter_wind = sum(value > 10)/length(value), start_date = min(date),
+  dplyr::summarise(winter_wind = sum(value > 10)/length(value), start_date = min(date),
             end_date = max(date))
 
 

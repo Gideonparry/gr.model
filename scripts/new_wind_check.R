@@ -77,15 +77,10 @@ gr_all <- inner_join(gr_data2, metadata, by = c("building_code", "city_code"))
 ################# other ways to do weather ##################################
 
 
-winter_wind <- data %>%
-  dplyr::group_by(city_code, date) %>%
+winter_wind <-  data %>%
+  dplyr::group_by(city_code, measurement) %>%
   dplyr::filter(measurement == "wind") %>%
-  dplyr::summarise(wind_val = mean(value)) %>%
-  dplyr::inner_join(final_result_df, by =  c("city_code", "date")) %>%
-  dplyr::mutate(snow = ifelse(value > 1, 1, 0)) %>%
-  dplyr::group_by(building_code) %>%
-  dplyr::summarise(winter_wind = sum(wind_val > 10 & snow == 1)/sum(snow == 1),
-                   start_date = min(date),
+  dplyr::summarise(winter_wind = sum(value > 10)/length(value), start_date = min(date),
                    end_date = max(date))
 
 
@@ -99,7 +94,7 @@ View(winter_wind)
 
 
 
-gr_total <- inner_join(gr_all, winter_wind, by = c("building_code"))
+gr_total <- inner_join(gr_all, winter_wind, by = c("city_code"))
 colnames(gr_total)
 
 ## doing og model with remaining data
@@ -117,11 +112,11 @@ gr_total$long <- round(gr_total$long * 4) / 4
 whole_map <-readRDS("D:/whole_map.rds")
 whole_map
 
-gr_total$new_wind <- terra::extract(entire_map,
+gr_total$new_wind <- terra::extract(whole_map,
                                     terra::vect(matrix(c(gr_total$long,
                                                          gr_total$lat),
                                                        ncol = 2),
-                                                crs = crs(entire_map)))[[2]]
+                                                crs = terra::crs(whole_map)))[[2]]
 
 model3 <- lm(sqrtgr ~ logground + new_wind, gr_total)
 summary(model3)
