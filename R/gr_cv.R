@@ -56,8 +56,8 @@ gr_cv <- function(train_data, test_data,
   ## making a list of vectors of results and names to return
 
   results <- list(test_data$sqrtgr, test_data$gr,
-                  original_prediction, lin_pred, rep(mean(train_data$gr), length(test_data$gr)),
-                  og_gr_pred, lin_gr_pred, forest_preds)
+                  original_prediction, lin_pred, rep(mean(train_data$gr),
+                  length(test_data$gr)), og_gr_pred, lin_gr_pred, forest_preds)
 
   names(results) <- c("Square root GR original test data",
                       "GR Original test data",

@@ -1,0 +1,350 @@
+library(GGally)
+library(ggplot2)
+
+data <- read.csv("D:\\complete_data.csv")
+metadata <- read.csv("D:\\gr_meta_ca_all.csv")
+data$season <- rep(NA, nrow(data))
+data$date <- as.Date(data$date)
+
+
+
+
+
+
+data$season <- ifelse((data$date > as.Date("1957-07-01") &
+                         data$date < as.Date("1958-07-01")), 2, data$season)
+data$season <- ifelse((data$date > as.Date("1958-07-01") &
+                         data$date < as.Date("1959-07-01")), 3, data$season)
+data$season <- ifelse((data$date > as.Date("1959-07-01") &
+                         data$date < as.Date("1960-07-01")), 4, data$season)
+data$season <- ifelse((data$date > as.Date("1960-07-01") &
+                         data$date < as.Date("1961-07-01")), 5, data$season)
+data$season <- ifelse((data$date > as.Date("1961-07-01") &
+                         data$date < as.Date("1962-07-01")), 6, data$season)
+data$season <- ifelse((data$date > as.Date("1962-07-01") &
+                         data$date < as.Date("1963-07-01")), 7, data$season)
+data$season <- ifelse((data$date > as.Date("1963-07-01") &
+                         data$date < as.Date("1964-07-01")), 8, data$season)
+data$season <- ifelse((data$date > as.Date("1964-07-01") &
+                         data$date < as.Date("1965-07-01")), 9, data$season)
+data$season <- ifelse((data$date > as.Date("1965-07-01") &
+                         data$date < as.Date("1966-07-01")), 10, data$season)
+data$season <- ifelse((data$date > as.Date("1966-07-01") &
+                         data$date < as.Date("1967-07-01")), 11, data$season)
+
+################# summarise by building code and season #####################
+
+
+library(dplyr)
+library(lubridate)
+
+
+ground_max <- data %>%
+  group_by(building_code, city_code, season) %>%
+  dplyr::filter(measurement == "ground") %>%
+  summarise(ground_max = max(value))
+
+
+roof_max <- data %>%
+  group_by(building_code, city_code, season) %>%
+  dplyr::filter(mma == "avg") %>%
+  summarise(roof_max = max(value))
+
+gr_data <- inner_join(ground_max, roof_max, by = c("building_code", "city_code",
+                                                   "season"))
+gr_data$gr <- gr_data$roof_max / gr_data$ground_max
+
+
+
+### dplyr::filtering out the arch hangars
+arch_hangars <- c("clab02", "cxbc02", "nbon02", "oton07", "wnmb04")
+
+gr_data2 <- gr_data %>%
+  dplyr::filter(!(building_code %in% arch_hangars))
+nrow(gr_data)
+nrow(gr_data2)
+
+
+### reproducing linear model
+gr_data2$sqrtgr <- sqrt(gr_data2$gr)
+gr_data2$logground <- log(gr_data2$ground_max)
+
+model <- lm(sqrtgr ~ logground, data = gr_data2)
+summary(model)
+
+#### getting average wind and temps
+
+
+wind_avgs <-  data %>%
+  group_by(city_code, measurement) %>%
+  dplyr::filter(measurement == "wind") %>%
+  summarise(wind_avg = mean(value), start_date = min(date),
+            end_date = max(date))
+
+
+temp_avgs <-  data %>%
+  group_by(city_code, measurement) %>%
+  dplyr::filter(measurement == "temp") %>%
+  summarise(temp_avg = mean(value), start_date = min(date),
+            end_date = max(date))
+nrow(temp_avgs)
+
+gr_data3 <- left_join(gr_data2, wind_avgs, by = c("city_code"))
+
+
+gr_data_weather <- left_join(gr_data3, temp_avgs, by = c("city_code"))
+
+
+
+gr_data_weather$sqrtgr <- sqrt(gr_data_weather$gr)
+gr_data_weather$logground <- log(gr_data_weather$ground_max)
+
+model <- lm(sqrtgr ~ logground, data = gr_data_weather)
+summary(model)
+
+model2 <- lm(sqrtgr ~ logground + wind_avg + temp_avg, gr_data_weather)
+summary(model2)
+
+
+pairs(gr_data_weather[,c(7,8,10,12)])
+
+gr_all <- inner_join(gr_data_weather, metadata,
+                     by = c("building_code", "city_code"))
+
+gr_all$roofflat <- ifelse(gr_all$Roof_Type == "Flat" , 1, 0)
+
+model3 <- lm(sqrtgr ~ logground + wind_avg + temp_avg + roofflat +
+               Exposure + Heated + Insulated + lat + long, gr_all)
+summary(model3)
+min(na.omit(gr_all$wind_avg))
+
+################# other ways to do weather ##################################
+above_freeze <-  data %>%
+  group_by(city_code, measurement, season) %>%
+  dplyr::filter(measurement == "temp") %>%
+  summarise(above_freeze = sum(value > 32)/length(value),
+            start_date = min(date),
+            end_date = max(date))
+
+### percentage days wind speed is over 10
+winter_wind <-  data %>%
+  dplyr::group_by(city_code, measurement, season) %>%
+  dplyr::filter(measurement == "wind") %>%
+  dplyr::summarise(winter_wind = sum(value > 10)/length(value),
+                   start_date = min(date),
+                   end_date = max(date))
+
+
+
+
+gr_total <- inner_join(gr_all, winter_wind, by = c("city_code", "season")) %>%
+  left_join(above_freeze, by = c("city_code", "season"))
+
+colnames(gr_total)
+gr_total <- gr_total[,c(-11,-12,-15,-16,-37,-38, -41, -42 )]
+
+
+
+
+
+#### aggregate overall wind and temp
+above_freeze_all <-  data %>%
+  group_by(city_code, measurement) %>%
+  dplyr::filter(measurement == "temp") %>%
+  summarise(above_freeze_all = sum(value > 32)/length(value),
+            start_date = min(date),
+            end_date = max(date))
+
+### percentage days wind speed is over 10
+winter_wind_all <-  data %>%
+  dplyr::group_by(city_code, measurement) %>%
+  dplyr::filter(measurement == "wind") %>%
+  dplyr::summarise(winter_wind_all = sum(value > 10)/length(value),
+                   start_date = min(date),
+                   end_date = max(date))
+
+
+
+
+gr_total <- inner_join(gr_total, winter_wind_all, by = c("city_code")) %>%
+  left_join(above_freeze_all, by = c("city_code"))
+
+
+
+
+#### getting average wind and temps for 3 months only
+data2 <- data %>%
+  dplyr::filter(month(date) %in% c(12,1,2))
+
+winter_wind_3month <-  data2 %>%
+  group_by(city_code, measurement) %>%
+  dplyr::filter(measurement == "wind") %>%
+  summarise(winter_wind_3month = sum(value > 10)/length(value),
+            start_date = min(date), end_date = max(date))
+
+gr_total <- inner_join(gr_total, winter_wind_3month, by = c("city_code"))
+
+############################ all this for the snow days stuff #################
+# Group the data by building_code and season, and apply the function to each group
+result_list <- data %>%
+  dplyr::group_by(building_code, season) %>%
+  dplyr::filter(measurement == "ground") %>%
+  dplyr::do(add_missing_dates(.))
+
+# Combine the result list into a single data frame
+final_result_df <- dplyr::bind_rows(result_list)
+
+final_result_df$measurement = "ground"
+final_result_df$city_code <- zoo::na.locf(final_result_df$city_code)
+final_result_df$building_code <- zoo::na.locf(final_result_df$building_code)
+final_result_df$season <- zoo::na.locf(final_result_df$season)
+final_result_df$value <- linear_impute(final_result_df$value)
+
+winter_wind_snow <- data %>%
+  dplyr::group_by(city_code, date) %>%
+  dplyr::filter(measurement == "wind") %>%
+  dplyr::summarise(wind_val = mean(value)) %>%
+  dplyr::inner_join(final_result_df, by =  c("city_code", "date")) %>%
+  dplyr::mutate(snow = ifelse(value > 1, 1, 0)) %>%
+  dplyr::group_by(building_code) %>%
+  dplyr::summarise(winter_wind_snow =
+                     sum(wind_val > 10 & snow == 1)/sum(snow == 1),
+                   start_date = min(date),
+                   end_date = max(date))
+
+gr_total <- inner_join(gr_total, winter_wind_snow, by = c("building_code"))
+
+## doing og model with remaining data
+model1 <- lm(sqrtgr ~ logground, gr_total)
+model2 <- lm(sqrtgr ~ logground + winter_wind, gr_total)
+model3 <- lm(sqrtgr ~ logground + winter_wind_all, gr_total)
+model4 <- lm(sqrtgr ~ logground + winter_wind_3month, gr_total)
+model5 <- lm(sqrtgr ~ logground + winter_wind_snow, gr_total)
+summary(model1)
+summary(model2)
+summary(model3)
+summary(model4)
+summary(model5)
+
+
+
+
+#write.csv(gr_total, "data-raw//all_wind_params.csv")
+################## Plotting ggplot graphs #########################
+
+ggplot(gr_total, aes(x = logground, y = sqrtgr)) +
+  geom_point() +
+  labs(title = "Log ground snow loads vs sqrt(GR)",
+       x = "log ground snow load",
+       y = "Sqrt(GR)") +
+  geom_smooth(method = "lm", se = FALSE)
+
+
+ggplot(gr_total, aes(x = gr)) +
+  geom_histogram(binwidth = 0.1, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "GR Values",
+       x = "GR",
+       y = "Frequency")
+
+og_hist <- ggplot(gr_total, aes(x = winter_wind)) +
+  geom_histogram(binwidth = 0.05, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Winter wind individual season",
+       x = "winter_wind",
+       y = "Frequency")
+
+all_hist <- ggplot(gr_total, aes(x = winter_wind_all)) +
+  geom_histogram(binwidth = 0.05, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Winter Wind all agrregate",
+       x = "winter_wind_all",
+       y = "Frequency")
+
+month3_hist <- ggplot(gr_total, aes(x = winter_wind_3month)) +
+  geom_histogram(binwidth = 0.05, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Winter Wind 3 month agrregate",
+       x = "winter_wind_all",
+       y = "Frequency")
+
+snow_hist <- ggplot(gr_total, aes(x = winter_wind_snow)) +
+  geom_histogram(binwidth = 0.05, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Winter Wind snow day agrregate",
+       x = "winter_wind_all",
+       y = "Frequency")
+
+
+gridExtra::grid.arrange(og_hist, all_hist, month3_hist, snow_hist, ncol = 2)
+
+
+#### filer out useless colums
+colnames(gr_total)
+
+gr_total$Parapet <- ifelse(gr_total$Parapet > 0, 1, 0)
+
+gr_total_seleted <- gr_total |> select(sqrtgr, logground,
+                                    wind_avg, temp_avg, Roof_Type, Slope,
+                                    roofflat, Size, Exposure, Heated, Insulated,
+                                    Parapet, winter_wind, winter_wind_all,
+                                    winter_wind_3month, winter_wind_snow,
+                                    above_freeze, above_freeze_all)
+
+
+colnames(gr_total_seleted)
+ggpairs(gr_total_seleted[c(3,5, 15:16)])
+
+ggpairs(gr_total_seleted[c(3, 6, 20)])
+
+
+ggpairs(gr_total_seleted[c(3, 8, 10)])
+
+exposure_plot <- ggplot(gr_total, aes(x = Exposure)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Exposure distribution",
+       x = "Exposure",
+       y = "Frequency")
+
+heated_plot <- ggplot(gr_total, aes(x = Heated)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Heated distribution",
+       x = "Heated",
+       y = "Frequency") +
+  scale_x_continuous(breaks = seq(0, 1, 1))
+
+insulated_plot <- ggplot(gr_total, aes(x = Insulated)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Insulated distribution",
+       x = "Insulated",
+       y = "Frequency") +
+  scale_x_continuous(breaks = seq(0, 1, 1))
+
+parapet_plot <- ggplot(gr_total, aes(x = Parapet)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Parapet distribution",
+       x = "Parapet",
+       y = "Frequency") +
+  scale_x_continuous(breaks = seq(0, 1, 1))
+
+gridExtra::grid.arrange(exposure_plot, heated_plot, insulated_plot,
+                        parapet_plot, ncol = 2)
+
+
+
+##################### Adding mapped wind ####################################
+
+
+gr_total$lat <- round(gr_total$lat * 4) / 4
+gr_total$long <- round(gr_total$long * 4) / 4
+
+
+whole_map <-readRDS("D:/whole_map.rds")
+whole_map
+
+gr_total$est_wind <- terra::extract(whole_map,
+                                    terra::vect(matrix(c(gr_total$long,
+                                                         gr_total$lat),
+                                                       ncol = 2),
+                                              crs = terra::crs(whole_map)))[[2]]
+
+model_grid <- lm(sqrtgr ~ logground + est_wind, gr_total)
+summary(model_grid)
+
+
+write.csv(gr_total, "data-raw//wind_all.csv")

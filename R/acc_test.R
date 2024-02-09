@@ -14,9 +14,7 @@
 
 acc_test <- function(data, k = 5,
                      formula1 = "sqrtgr ~ logground",
-                     formula2 = "sqrtgr ~ logground + roofflat*Exposure +
-                     roofflat*winter_wind +
-                     log(Size) + temp_avg + Heated + Parapet",
+                     formula2 = "sqrtgr ~ logground + winter_wind_all",
                      rf_formula = gr ~ ground_max + roofflat + Exposure +
                        winter_wind + Size + temp_avg + Heated + Parapet) {
 
@@ -37,6 +35,7 @@ acc_test <- function(data, k = 5,
                                rf_formula = rf_formula)
   }
 
+  ## Obtaining the building results by
   results_builings <- list()
   for (i in 1:8){
     results_builings[[i]] <-
@@ -70,12 +69,14 @@ acc_test <- function(data, k = 5,
                                    rf_formula = rf_formula)
   }
 
+  ## Results from sub-setting by observations
   results_obs <- list()
   for (i in 1:8){
     results_obs[[i]] <-
       unlist(lapply(obs_fold_results, function(sub_list) sub_list[[i]]))
   }
 
+  ## Getting RMSE from sub-setting by observations
   rmse_obs <- c()
   for(i in seq_len(4)){
     rmse_obs[i] <-
@@ -83,6 +84,7 @@ acc_test <- function(data, k = 5,
                     na.omit(results_obs[[i+4]]))^2))
   }
 
+  ## median abs error from observation sub-setting
   mdae_obs <- c()
   for(i in seq_len(4)){
     mdae_obs[i] <-

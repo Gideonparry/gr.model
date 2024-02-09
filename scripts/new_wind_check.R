@@ -80,8 +80,8 @@ gr_all <- inner_join(gr_data2, metadata, by = c("building_code", "city_code"))
 winter_wind <-  data %>%
   dplyr::group_by(city_code, measurement) %>%
   dplyr::filter(measurement == "wind") %>%
-  dplyr::summarise(winter_wind = sum(value > 10)/length(value), start_date = min(date),
-                   end_date = max(date))
+  dplyr::summarise(winter_wind = sum(value > 10)/length(value),
+                   start_date = min(date),end_date = max(date))
 
 
 
@@ -116,7 +116,7 @@ gr_total$new_wind <- terra::extract(whole_map,
                                     terra::vect(matrix(c(gr_total$long,
                                                          gr_total$lat),
                                                        ncol = 2),
-                                                crs = terra::crs(whole_map)))[[2]]
+                                              crs = terra::crs(whole_map)))[[2]]
 
 model3 <- lm(sqrtgr ~ logground + new_wind, gr_total)
 summary(model3)

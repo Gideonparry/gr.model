@@ -8,8 +8,7 @@ acc_test(
   data,
   k = 5,
   formula1 = "sqrtgr ~ logground",
-  formula2 =
-    "sqrtgr ~ logground + roofflat*Exposure +\\n                     roofflat*winter_wind +\\n                     log(Size) + temp_avg + Heated + Parapet",
+  formula2 = "sqrtgr ~ logground + winter_wind_all",
   rf_formula = gr ~ ground_max + roofflat + Exposure + winter_wind + Size + temp_avg +
     Heated + Parapet
 )
