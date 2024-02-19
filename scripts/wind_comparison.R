@@ -347,4 +347,5 @@ model_grid <- lm(sqrtgr ~ logground + est_wind, gr_total)
 summary(model_grid)
 
 
-write.csv(gr_total, "data-raw//wind_all.csv")
+#write.csv(gr_total, "data-raw//wind_all.csv")
+

@@ -36,7 +36,7 @@ acc_test(data = data, seed = 123,
                   roofflat*winter_wind +
                   log(Size) + temp_avg + Parapet)[c(3,7,11,15)]
 
-acc_test(data = data, seed = 1234,
+acc_test(data = data,
          formula2 = "sqrtgr ~ logground + roofflat*Exposure +
                   roofflat*winter_wind +
                   log(Size) + temp_avg + Parapet")[c(3,7,11,15)]

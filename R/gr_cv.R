@@ -53,6 +53,9 @@ gr_cv <- function(train_data, test_data,
 
 
 
+  ### Add svm to this
+
+
   ## making a list of vectors of results and names to return
 
   results <- list(test_data$sqrtgr, test_data$gr,
