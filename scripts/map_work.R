@@ -1,5 +1,5 @@
-data <- read.csv("D:\\complete_data.csv")
-metadata <- read.csv("D:\\gr_meta_ca_all.csv")
+data <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\complete_data.csv")
+metadata <- read.csv("C:\\Users\\bean_student\\Documents\\GraphData\\gr_meta_ca_all.csv")
 data$season <- rep(NA, nrow(data))
 data$date <- as.Date(data$date)
 
@@ -93,7 +93,7 @@ summary(model2)
 model3 <- lm(sqrtgr ~ logground + winter_wind, data = gr_total)
 summary(model3)
 
-whole_map <- readRDS("D:\\whole_map.rds")
+whole_map <- readRDS("C:\\Users\\bean_student\\Documents\\whole_map.rds")
 whole_map <- terra::unwrap(whole_map)
 
 gr_total$lat <- sapply(gr_total$lat, function(x) round(x / 0.25) * 0.25)
@@ -116,3 +116,5 @@ summary(model4)
 
 .1826-.1548
 .1716-.1548
+
+cor(gr_total$winter_wind,gr_total$est_wind)
