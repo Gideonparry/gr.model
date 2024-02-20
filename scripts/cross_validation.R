@@ -112,7 +112,7 @@ acc_test(data = data, seed = 2319,
 colnames(data)
 
 ### rf with weather, exposure and flat
-acc_test(data, 123, rf_formula = gr ~ logground + temp_avg + Exposure +
+acc_test(data, rf_formula = gr ~ logground + temp_avg + Exposure +
            roofflat + winter_wind)[c(4,8,12,16)]
 
 acc_test(data, 1234, rf_formula = gr ~ logground + temp_avg + Exposure +

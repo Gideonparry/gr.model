@@ -18,9 +18,13 @@ acc_test <- function(data, k = 5,
                      rf_formula = gr ~ ground_max + roofflat + Exposure +
                        winter_wind + Size + temp_avg + Heated + Parapet) {
 
+
   ## setting each building as being in fold 1-k
   building_nums <- sample(rep_len(seq_len(k),
                                   length(unique(data$building_code))))
+
+  ## Getting both subsets early
+  obs_nums <- sample(rep_len(seq_len(k),nrow(data)))
 
   # putting numbers to building codes
   test_build <- train_data <- test_data <-
@@ -56,7 +60,7 @@ acc_test <- function(data, k = 5,
                          - na.omit(results_builings[[i+4]]))))
   }
 
-  obs_nums <- sample(rep_len(seq_len(k),nrow(data)))
+  ## Observation stuff
 
   test_obs <- obs_train_data <- obs_test_data <-
     obs_fold_results <- vector("list", k)
