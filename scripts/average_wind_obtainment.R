@@ -47,6 +47,9 @@ for (nc_file in test_months) {
   saveRDS(grid_year, rds_file)
 }
 
+test <- terra::unwrap(readRDS("D:/test/small_subset.rds"))
+test
+
 
 
 early_grids <-

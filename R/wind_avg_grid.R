@@ -21,5 +21,5 @@ wind_avg_grid <- function(file, var1 = "u10", var2 = "v10") {
 
   avg_wind <- sum(wind_speed) / nlyr(wind_speed)
 
-  winter_wind
+  avg_wind
 }
