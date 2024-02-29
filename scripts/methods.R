@@ -85,6 +85,14 @@ ggpairs(gr_total |> select(sqrtgr, logground, wind_avg, temp_avg,
 
 
 plot(model_new)
+
+ggplot(model_new, aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted Values", y= "Residuals") +
+  theme_bw()
+
+
 shapiro.test(model_new$residuals)
 
 ## Trying with winter_wind_all

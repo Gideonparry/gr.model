@@ -232,43 +232,49 @@ summary(model5)
 #write.csv(gr_total, "data-raw//all_wind_params.csv")
 ################## Plotting ggplot graphs #########################
 
-ggplot(gr_total, aes(x = logground, y = sqrtgr)) +
+ggplot(gr_total[gr_total$gr <= 2,], aes(x = logground, y = sqrtgr)) +
   geom_point() +
-  labs(title = "Log ground snow loads vs sqrt(GR)",
+  labs(title = "",
        x = "log ground snow load",
        y = "Sqrt(GR)") +
-  geom_smooth(method = "lm", se = FALSE)
+  geom_smooth(method = "lm", se = FALSE)+
+  theme_bw()
 
 
 ggplot(gr_total, aes(x = gr)) +
-  geom_histogram(binwidth = 0.1, fill = "blue", color = "black", alpha = 0.7) +
-  labs(title = "GR Values",
+  geom_histogram(binwidth = 0.1, fill = "darkgrey", color = "black", alpha = 0.7) +
+  labs(title = "",
        x = "GR",
-       y = "Frequency")
+       y = "Frequency")+
+  theme_bw()
 
 og_hist <- ggplot(gr_total, aes(x = winter_wind)) +
-  geom_histogram(binwidth = 0.05, fill = "blue", color = "black", alpha = 0.7) +
-  labs(title = "Winter wind individual season",
+  geom_histogram(binwidth = 0.05, fill = "darkgrey", color = "black", alpha = 0.7) +
+  labs(title = "Individual season",
        x = "winter_wind",
-       y = "Frequency")
+       y = "Frequency")+
+  theme_bw()
 
 all_hist <- ggplot(gr_total, aes(x = winter_wind_all)) +
-  geom_histogram(binwidth = 0.05, fill = "blue", color = "black", alpha = 0.7) +
-  labs(title = "Winter Wind all agrregate",
+  geom_histogram(binwidth = 0.05, fill = "darkgrey", color = "black", alpha = 0.7) +
+  labs(title = "All agrregate",
        x = "winter_wind_all",
-       y = "Frequency")
+       y = "Frequency")+
+  theme_bw()
 
 month3_hist <- ggplot(gr_total, aes(x = winter_wind_3month)) +
-  geom_histogram(binwidth = 0.05, fill = "blue", color = "black", alpha = 0.7) +
-  labs(title = "Winter Wind 3 month agrregate",
-       x = "winter_wind_all",
-       y = "Frequency")
+  geom_histogram(binwidth = 0.05, fill = "darkgrey", color = "black", alpha = 0.7) +
+  labs(title = "3 month agrregate",
+       x = "winter_wind",
+       y = "Frequency")+
+  theme_bw()
 
 snow_hist <- ggplot(gr_total, aes(x = winter_wind_snow)) +
-  geom_histogram(binwidth = 0.05, fill = "blue", color = "black", alpha = 0.7) +
-  labs(title = "Winter Wind snow day agrregate",
-       x = "winter_wind_all",
-       y = "Frequency")
+  geom_histogram(binwidth = 0.05, fill = "darkgrey", color = "black", alpha = 0.7) +
+  labs(title = "Snow day agrregate",
+       x = "winter_wind",
+       y = "Frequency")+
+  theme_bw()
 
 
 gridExtra::grid.arrange(og_hist, all_hist, month3_hist, snow_hist, ncol = 2)
@@ -288,39 +294,39 @@ gr_total_seleted <- gr_total |> select(sqrtgr, logground,
 
 
 colnames(gr_total_seleted)
-ggpairs(gr_total_seleted[c(3,5, 15:16)])
+ggpairs(gr_total_seleted[c(3,5, 15:16)]) + theme_bw()
 
-ggpairs(gr_total_seleted[c(3, 6, 20)])
+ggpairs(gr_total_seleted[c(3, 6, 20)]) + theme_bw()
 
 
-ggpairs(gr_total_seleted[c(3, 8, 10)])
+ggpairs(gr_total_seleted[c(3, 8, 10)]) + theme_bw()
 
 exposure_plot <- ggplot(gr_total, aes(x = Exposure)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
-  labs(title = "Exposure distribution",
+  geom_histogram(binwidth = 1, fill = "darkgrey", color = "black", alpha = 0.7) +
+  labs(title = "",
        x = "Exposure",
-       y = "Frequency")
+       y = "Frequency") + theme_bw()
 
 heated_plot <- ggplot(gr_total, aes(x = Heated)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
-  labs(title = "Heated distribution",
+  geom_histogram(binwidth = 1, fill = "darkgrey", color = "black", alpha = 0.7) +
+  labs(title = "",
        x = "Heated",
        y = "Frequency") +
-  scale_x_continuous(breaks = seq(0, 1, 1))
+  scale_x_continuous(breaks = seq(0, 1, 1)) + theme_bw()
 
 insulated_plot <- ggplot(gr_total, aes(x = Insulated)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
-  labs(title = "Insulated distribution",
+  geom_histogram(binwidth = 1, fill = "darkgrey", color = "black", alpha = 0.7) +
+  labs(title = "",
        x = "Insulated",
        y = "Frequency") +
-  scale_x_continuous(breaks = seq(0, 1, 1))
+  scale_x_continuous(breaks = seq(0, 1, 1)) + theme_bw()
 
 parapet_plot <- ggplot(gr_total, aes(x = Parapet)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
-  labs(title = "Parapet distribution",
+  geom_histogram(binwidth = 1, fill = "darkgrey", color = "black", alpha = 0.7) +
+  labs(title = "",
        x = "Parapet",
        y = "Frequency") +
-  scale_x_continuous(breaks = seq(0, 1, 1))
+  scale_x_continuous(breaks = seq(0, 1, 1)) + theme_bw()
 
 gridExtra::grid.arrange(exposure_plot, heated_plot, insulated_plot,
                         parapet_plot, ncol = 2)
