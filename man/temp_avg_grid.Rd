@@ -4,7 +4,7 @@
 \alias{temp_avg_grid}
 \title{Retuns average temp from raster}
 \usage{
-temp_avg_grid(file, var1 = "tm2")
+temp_avg_grid(file, var1 = "t2m")
 }
 \arguments{
 \item{file}{the file to return avg_temp from}
