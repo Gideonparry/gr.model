@@ -6,7 +6,13 @@ library(rpart)
 library(rpart.plot)
 library(car)
 
-gr_total <- read.csv("data-raw//wind_all.csv")
+# version 1 of data
+#gr_total <- read.csv("data-raw//wind_all.csv")
+
+# version 2 of data
+gr_total <- read.csv("data-raw//updated_data.csv")
+
+
 ## adding above or below 15 slope
 gr_total$slope15 <- ifelse(gr_total$Slope > 15, 1, 0)
 
@@ -80,8 +86,15 @@ summary(model_new)
 og_mod <- lm(sqrtgr ~ logground, data = gr_total)
 summary(og_mod)
 
+gr_total$logsize <- log(gr_total$Size)
+
+
 ggpairs(gr_total |> select(sqrtgr, logground, wind_avg, temp_avg,
-                              Size))
+                              logsize)) + theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks = element_blank())
+
 
 
 plot(model_new)
@@ -117,6 +130,37 @@ plot(mod2$fitted.values, mod2$residuals, xlab = "Fitted values",
 abline(0,0)
 
 
+### Using ERA 5 for weather
+
+ERA_avg <- lm(sqrtgr ~ logground + est_wind_avg + est_temp_avg +
+                  roofflat + Size + Exposure +  Insulated +
+                  Parapet + roofflat*Exposure + roofflat*est_wind_avg,
+                data = gr_total)
+
+
+summary(ERA_avg)
+
+ERA_w2 <- lm(sqrtgr ~ logground + est_wind + est_temp_avg +
+               roofflat + Size + Exposure +  Insulated +
+               Parapet + roofflat*Exposure + roofflat*est_wind,
+             data = gr_total)
+
+
+summary(ERA_w2)
+
+
+building_mod <- lm(sqrtgr ~ logground +
+                     roofflat + Size + Exposure +  Insulated +
+                     Parapet + roofflat*Exposure ,
+                   data = gr_total)
+summary(building_mod)
+
+temp_era5_mod <- lm(sqrtgr ~ logground + est_temp_avg +
+                      roofflat + Size + Exposure +  Insulated +
+                      Parapet + roofflat*Exposure ,
+                    data = gr_total)
+
+summary(temp_era5_mod)
 ## Comaring metrics
 AIC(model_new)
 AIC(mod2)

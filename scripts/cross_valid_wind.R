@@ -1,4 +1,4 @@
-data <- read.csv("data-raw/wind_all.csv")
+data <- read.csv("data-raw//updated_data.csv")
 
 ## Setting seed to partion for reports winter wind
 set.seed(1234)

@@ -214,6 +214,8 @@ winter_wind_snow <- data %>%
 
 gr_total <- inner_join(gr_total, winter_wind_snow, by = c("building_code"))
 
+gr_total <- gr_total[gr_total$gr <= 2,]
+
 ## doing og model with remaining data
 model1 <- lm(sqrtgr ~ logground, gr_total)
 model2 <- lm(sqrtgr ~ logground + winter_wind, gr_total)
@@ -294,12 +296,22 @@ gr_total_seleted <- gr_total |> select(sqrtgr, logground,
 
 
 colnames(gr_total_seleted)
-ggpairs(gr_total_seleted[c(3,5, 15:16)]) + theme_bw()
+ggpairs(gr_total_seleted[c(3,5, 15:16)]) + theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks = element_blank())
 
-ggpairs(gr_total_seleted[c(3, 6, 20)]) + theme_bw()
+
+ggpairs(gr_total_seleted[c(3, 6, 20)]) + theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks = element_blank())
 
 
-ggpairs(gr_total_seleted[c(3, 8, 10)]) + theme_bw()
+ggpairs(gr_total_seleted[c(3, 8, 10)]) + theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks = element_blank())
 
 exposure_plot <- ggplot(gr_total, aes(x = Exposure)) +
   geom_histogram(binwidth = 1, fill = "darkgrey", color = "black", alpha = 0.7) +
@@ -352,6 +364,80 @@ gr_total$est_wind <- terra::extract(whole_map,
 model_grid <- lm(sqrtgr ~ logground + est_wind, gr_total)
 summary(model_grid)
 
+### version 1 of data
 
 #write.csv(gr_total, "data-raw//wind_all.csv")
+
+###############################################################################
+### adding mapped average wind #####
+
+wind_avg_map <-readRDS("D:/wind_avg_map.rds")
+wind_avg_map
+
+gr_total$est_wind_avg <- terra::extract(wind_avg_map,
+                                    terra::vect(matrix(c(gr_total$long,
+                                                         gr_total$lat),
+                                                       ncol = 2),
+                                 crs = terra::crs(wind_avg_map)))[[2]]
+
+
+#### adding mapped average temp
+
+temp_avg_map <-readRDS("D:/temp_avg_map.rds")
+temp_avg_map
+
+gr_total$est_temp_avg <- terra::extract(temp_avg_map,
+                                        terra::vect(matrix(c(gr_total$long,
+                                                             gr_total$lat),
+                                                           ncol = 2),
+                                      crs = terra::crs(temp_avg_map)))[[2]]
+
+
+
+## converting units to metric
+## converting psf to kg/m^2
+gr_total$ground_max <- gr_total$ground_max*4.8824
+gr_total$roof_max <- gr_total$roof_max*4.8824
+gr_total$logground <- log(gr_total$ground_max)
+
+## mph to m/s
+gr_total$wind_avg <- gr_total$wind_avg*0.44704
+
+## temp F to C
+gr_total$temp_avg <- (gr_total$temp_avg - 32)*(5/9)
+
+## ft^2 to m^2
+gr_total$Size <- gr_total$Size*0.09290304
+
+## kelvin to celcius
+gr_total$est_temp_avg <- gr_total$est_temp_avg - 273.15
+
+
+
+## Scatters of canadina data vs ERA 5 data
+wind_avg_scat <- ggplot(gr_total, aes(x = wind_avg, y = est_wind_avg)) +
+  geom_point() +
+  labs(title = "",
+       x = "Canadian Average wind",
+       y = "Gridded average wind") +
+  theme_bw()
+
+w2_scat <- ggplot(gr_total, aes(x = winter_wind_all, y = est_wind)) +
+  geom_point() +
+  labs(title = "",
+       x = "Canadian W2",
+       y = "Gridded W2") +http://127.0.0.1:42023/graphics/plot_zoom_png?width=700&height=131
+  theme_bw()
+
+temp_avg_scat <- ggplot(gr_total, aes(x = temp_avg, y = est_temp_avg)) +
+  geom_point() +
+  labs(title = "",
+       x = "Canadian Average temp",
+       y = "Gridded average temp") +
+  theme_bw()
+
+
+gridExtra::grid.arrange(wind_avg_scat, w2_scat, temp_avg_scat, ncol = 3)
+### version 2 of data
+#write.csv(gr_total, "data-raw//updated_data.csv")
 
