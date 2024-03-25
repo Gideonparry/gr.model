@@ -9,17 +9,14 @@
 #' @param rightdate The correct start date
 
 date_fix <- function(data, enddate, wrongdate = "1964-12-01",
-                     rightdate = "1964-11-01"){
+                     rightdate = "1964-11-01") {
   datenum <- as.numeric(as.Date(enddate))
-  data[,1] <- as.numeric(as.Date(data[,1]))
-  data[,1] <- data[,1] - datenum
+  data[, 1] <- as.numeric(as.Date(data[, 1]))
+  data[, 1] <- data[, 1] - datenum
   numerator <- datenum - as.numeric(as.Date(rightdate))
   denominator <- datenum - as.numeric(as.Date(wrongdate))
-  data[,1] <- data[,1] * (numerator / denominator)
-  data[,1] <- data[,1] + datenum
-  data[,1] <- as.Date(data[,1])
+  data[, 1] <- data[, 1] * (numerator / denominator)
+  data[, 1] <- data[, 1] + datenum
+  data[, 1] <- as.Date(data[, 1])
   data
 }
-
-
-

@@ -8,7 +8,7 @@ data$date <- as.Date(data$date)
 
 
 
-
+## Adding season variable to data
 
 
 data$season <- ifelse((data$date > as.Date("1957-07-01") &
@@ -107,6 +107,8 @@ summary(model2)
 
 
 pairs(gr_data_weather[,c(7,8,10,12)])
+
+## Adding building and city code
 
 gr_all <- inner_join(gr_data_weather, metadata,
                      by = c("building_code", "city_code"))
@@ -294,6 +296,8 @@ gr_total_seleted <- gr_total |> select(sqrtgr, logground,
                                     winter_wind_3month, winter_wind_snow,
                                     above_freeze, above_freeze_all)
 
+### More plots
+
 
 colnames(gr_total_seleted)
 ggpairs(gr_total_seleted[c(3,5, 15:16)]) + theme_bw() +
@@ -400,6 +404,15 @@ gr_total$ground_max <- gr_total$ground_max*4.8824
 gr_total$roof_max <- gr_total$roof_max*4.8824
 gr_total$logground <- log(gr_total$ground_max)
 
+
+gr_total$slope15 <- ifelse(gr_total$Slope > 15, 1, 0)
+
+gr_total$exposed <- ifelse(gr_total$Exposure == 2, 1, 0)
+gr_total$sheltered <- ifelse(gr_total$Exposure == 0, 1, 0)
+
+gr_total <- gr_total[gr_total$gr <= 2,]
+
+
 ## mph to m/s
 gr_total$wind_avg <- gr_total$wind_avg*0.44704
 
@@ -409,8 +422,13 @@ gr_total$temp_avg <- (gr_total$temp_avg - 32)*(5/9)
 ## ft^2 to m^2
 gr_total$Size <- gr_total$Size*0.09290304
 
+
 ## kelvin to celcius
 gr_total$est_temp_avg <- gr_total$est_temp_avg - 273.15
+
+## adding alters slope15
+gr_total$slope_1_15 <- ifelse(gr_total$slope15 == 1 & gr_total$roofflat == 0,
+                              1, 0)
 
 
 
@@ -426,7 +444,7 @@ w2_scat <- ggplot(gr_total, aes(x = winter_wind_all, y = est_wind)) +
   geom_point() +
   labs(title = "",
        x = "Canadian W2",
-       y = "Gridded W2") +http://127.0.0.1:42023/graphics/plot_zoom_png?width=700&height=131
+       y = "Gridded W2") +
   theme_bw()
 
 temp_avg_scat <- ggplot(gr_total, aes(x = temp_avg, y = est_temp_avg)) +

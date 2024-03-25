@@ -1,4 +1,4 @@
-#' Returns the rsme and median absolute error of different models
+#' Returns the w2 parameter of ERA5 data
 #'
 #' Takes train and test data and comuptes different models to compare accuracy
 #' measures

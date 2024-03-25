@@ -1,0 +1,97 @@
+building_code,city_code,City,Province,Type,Bld_Type,Name,Roof_Type,Slope,Size,Eave_Height,Material,Exposure,Heated,Insulated,Parapet,order,lat,long
+avqc01,avqc,Arvida,QC,A,1,Building 60,Flat,0,48490,34,,2,1,1,0,47,48.4,-71.1
+clab01,clab,Cold Lake,AB,C,1,US Depot,Flat,0,22752,22,,2,0,0,0,71,54.5,-110.2
+clab02,clab,Cold Lake,AB,C,2,Arch Hanger,Flat,0,35200,67,,2,0,0,0,72,54.5,-110.2
+clab03,clab,Cold Lake,AB,C,3,ME Garage,Flat,0,26112,21,,2,0,0,0,73,54.5,-110.2
+clab04,clab,Cold Lake,AB,C,4,Cant Hangar,Flat,0,127563,53,,2,0,0,0,74,54.5,-110.2
+cxbc01,cxbc,Comox,BC,C,1,US Depot,Flat,0,22752,22,,2,0,0,0,65,49.7,-124.9
+cxbc02,cxbc,Comox,BC,C,2,Arch Hanger,Flat,0,35200,67,,2,0,0,0,66,49.7,-124.9
+cxbc03,cxbc,Comox,BC,C,3,ME Garage,Flat,0,26112,21,,2,0,0,0,67,49.7,-124.9
+cxbc04,cxbc,Comox,BC,C,4,Cant Hangar,Flat,0,127563,53,,2,0,0,0,68,49.7,-124.9
+dvon01,dvon,Downsview,ON,C,1,US Depot,Flat,0,22752,22,,2,0,0,0,81,43.7,-79.5
+dvon02,dvon,Downsview,ON,C,3,ME Garage,Flat,0,26112,21,,2,0,0,0,82,43.7,-79.5
+edab01,edab,Edmonton ,AB,A,1,Administration Building,Flat,0,3404,60,,2,1,1,0,15,53.5,-113.5
+edab02,edab,Edmonton ,AB,A,2,Mining Store Shed,Gable,21,368,7,,0,0,0,0,16,53.5,-113.5
+edab03,edab,Edmonton ,AB,C,NA,ME Garage,Flat,0,26112,21,,2,0,0,0,16.25,53.5,-113.5
+edab04,edab,Edmonton ,AB,C,NA,Cant Hangar,Flat,0,127563,53,,2,0,0,0,16.75,53.5,-113.5
+fcmb01,fcmb,Fort Churchill,MB,A,1,G-22,Gable,17,192,8,,,1,1,0,24,58.8,-94.1
+fcmb02,fcmb,Fort Churchill,MB,A,2,F-2,Flat,0,15675,57,,,1,1,0,25,58.8,-94.1
+fcmb03,fcmb,Fort Churchill,MB,A,3,J-54,Flat,0,15675,57,,,1,1,0,26,58.8,-94.1
+fcmb04,fcmb,Fort Churchill,MB,A,4,J-165,Flat,0,15675,57,,,1,1,0,27,58.8,-94.1
+fcmb05,fcmb,Fort Churchill,MB,A,5,E-31,Flat,0,6000,20,,,1,1,0,28,58.8,-94.1
+gtnb01,gtnb,Gagetown,NB,A,1,Workshop B-18,Flat,0,22440,20,,2,1,1,1,53,45.8,-66.1
+gtnb02,gtnb,Gagetown,NB,A,2,Officers Mess F-5,Gable,23,5586,10,,2,1,1,0,54,45.8,-66.1
+gdnf01,gdnf,Gander,NF,A,1,29 Hawker Cres,Gable,23,1260,10,,0,1,1,0,58,49,-54.6
+gdnf02,gdnf,Gander ,NF,A,2,Mech Equip Room,Flat,0,1440,24,,1,0,1,0,59,49,-54.6
+gdnf03,gdnf,Gander ,NF,A,NA,Building 64,Gable,27,2400,11,,2,1,1,0,59.5,49,-54.6
+glbc01,glbc,Glacier,BC,A,1,Alpine Club Lodge,Gable,38,1064,8,,0,0,0,0,4,51.3,-117.5
+glbc02,glbc,Glacier ,BC,A,2,Powder House,Gable,2,400,10,,,0,0,0,5,51.3,-117.5
+glbc03,glbc,Glacier ,BC,A,3,Office,Gable,18,406,9,,2,1,0,0,6,51.3,-117.5
+glbc04,glbc,Glacier,BC,A,4,Vehicle Storage,Flat,0,6300,25,,2,0,0,0,7,53.3,-60.4
+gblb01,gblb,Goose Bay,LB,A,1,D-26,Flat,0,4770,12,,,1,1,0,60,53.3,-60.4
+gblb02,gblb,Goose Bay ,LB,A,2,D-24,Gable,26,750,13,,2,1,1,0,61,53.3,-60.4
+gblb03,gblb,Goose Bay,LB,C,1,US Depot,Flat,0,22752,22,,2,0,0,0,79,53.3,-60.4
+gblb04,gblb,Goose Bay,LB,C,3,ME Garage,Flat,0,26112,21,,2,0,0,0,80,53.3,-60.4
+hxns01,hxns,Halifax,NS,A,1,NS Tech College,Flat,0,9472,48,,0,1,1,1,55,44.7,-63.6
+hxns02,hxns,Halifax,NS,A,2,NRC Lab,Flat,0,3876,30,,2,1,1,0,56,44.7,-63.6
+hxns03,hxns,Halifax,NS,A,3,Engineering Building,Gable,0,6000,14,,0,1,0,0,57,44.7,-63.6
+innt01,innt,Inuvik,NWT,A,1,E-3 School,Gable,27,756,10,,0,1,1,0,11,68.4,-133.7
+innt02,innt,Inuvik,NWT,A,2,E-3 Residence,Gable,27,648,10,,2,1,1,0,12,68.4,-133.7
+innt03,innt,Inuvik,NWT,A,3,Home Economics Annex,Gable,27,942,10,,1,0,0,0,13,68.4,-133.7
+innt04,innt,Inuvik,NWT,A,4,Federal Building,Flat,0,4800,30,,2,1,1,0,14,68.4,-133.7
+innt05,innt,Inuvik,NWT,A,NA,School Building,Gable,27,924,10,,2,1,1,0,14.5,68.4,-133.7
+kion01,kion,Kingston,ON,A,1,26 Edge Hill Ave,Gable,27,1240,10,,0,1,1,0,31,44.2,-76.5
+kion02,kion,Kingston,ON,A,2,McNeil House,Flat,0,3132,40,,2,1,1,3,32,44.2,-76.5
+lcab01,lcab,Lancaster,AB,C,3,ME Garage,Flat,0,26112,21,,2,0,0,0,69,53.7,-113.5
+lcab02,lcab,Lancaster,AB,C,4,Cant Hangar,Flat,0,127563,53,,2,0,0,0,70,53.7,-113.5
+mtqc01,mtqc,Montreal,QC,A,1,7561 Casgrain St,Flat,0,990,16,,0,1,1,0,44,45.5,-73.6
+mtqc02,mtqc,Montreal,QC,A,2,8439 Berri St,Flat,0,1650,25,,2,1,0,2,45,45.5,-73.6
+mtqc03,mtqc,Montreal,QC,A,3,11771 Obrien Blvd,Gable,27,1312,,,2,1,1,0,46,45.5,-73.6
+nppe01,nppe,National Park,PEI,A,1,Dalvay Central Stores,Flat,0,3360,14,,1,1,1,,62,46.4,-62.7
+nppe02,nppe,National Park,PEI,A,2,Dalvay Central Stores (unheated),Flat,0,3360,14,,1,0,1,,63,46.4,-62.7
+nppe03,nppe,National Park,PEI,A,3,Dalvay Residence,Gable,23,1364,9,,2,1,1,,64,46.4,-62.7
+nppe04,nppe,National Park,PEI,A,NA,Stanhope registration office,Flat,0,390,9,,1,0,1,,64.5,46.4,-62.7
+nbon01,nbon,North Bay,ON,C,1,US Depot,Flat,0,22752,22,,2,0,0,0,83,46.3,-79.5
+nbon02,nbon,North Bay,ON,C,2,Arch Hanger,Flat,0,35200,67,,2,0,0,0,84,46.3,-79.5
+nbon03,nbon,North Bay,ON,C,3,ME Garage,Flat,0,26112,21,,2,0,0,0,85,46.3,-79.5
+oton01,oton,Ottawa ,ON,A,1,72 Bishop Blvd,Gable,27,720,10,,2,1,1,0,33,45.4,-75.7
+oton02,oton,Ottawa ,ON,A,2,40 Barker Blvd,Gable,27,720,10,,2,1,1,0,34,45.4,-75.7
+oton03,oton,Ottawa ,ON,A,6,40A Barker Blvd,Gable,,1330,9,,2,1,1,0,35,45.4,-75.7
+oton04,oton,Ottawa ,ON,A,3,DBR,Flat,0,2392,32,,2,1,1,0,36,45.4,-75.7
+oton05,oton,Ottawa ,ON,A,4,Davidson Cres,Flat,0,2754,10,,2,1,1,0,37,45.4,-75.7
+oton06,oton,Ottawa ,ON,A,5,Fairhavenway,Flat,0,2303,11,,0,1,1,0,38,45.4,-75.7
+oton07,oton,Ottawa ,ON,C,2,Arch Hanger,Flat,NA,35200,67,,2,0,0,0,86,45.4,-75.7
+oton08,oton,Ottawa ,ON,C,3,ME Garage,Flat,0,26112,21,,2,0,0,0,87,45.4,-75.7
+oton09,oton,Ottawa ,ON,C,4,Cant Hangar,Flat,,127563,53,,2,0,0,0,88,45.4,-75.7
+oton10,oton,Ottawa ,ON,A,NA,NRC Dome,Dome,,,,,2,0,0,,88.5,45.4,-75.7
+qcqc01,qcqc,Quebec,QC,A,1,Pavilion Vachon,Flat,0,6528,70,,2,1,1,0,48,46.8,-71.2
+qcqc02,qcqc,Quebec,QC,A,2,Gymnasium,Flat,0,13446,,,2,1,1,0,49,46.8,-71.2
+rsbc01,rsbc,Revelstoke,BC,A,1,National Park Shelter,Gable,34,336,7,,0,0,0,0,8,51,-118.2
+rsbc02,rsbc,Revelstoke,BC,A,2,208 9th St. E,Gable,27,672,11,,0,1,1,0,9,51,-118.2
+rsbc03,rsbc,Revelstoke,BC,A,3,Mountain View Elementary,Flat,0,5655,14,,2,1,1,0,10,51,-118.2
+sksk01,sksk,Saskatoon ,SK,A,1,314 Lake Cres,Gable,18,1998,10,,2,1,1,0,17,52.1,-106.7
+sksk02,sksk,Saskatoon ,SK,A,2,133-107th St,Gable ,23,1150,10,,2,1,1,0,18,52.1,-106.7
+sksk03,sksk,Saskatoon ,SK,A,3,Outdoor Test Station,Flat,0,720,13,,,,,,19,52.1,-106.7
+sksk04,sksk,Saskatoon ,SK,A,4,NRC Lab,Flat,0,532,76,,2,1,1,0,20,52.1,-106.7
+sksk05,sksk,Saskatoon ,SK,A,5,Gymnasium,Flat,0,36450,38,,2,1,0,2,21,52.1,-106.7
+saqc01,saqc,Ste Anne De Bellevue,QC,A,1,Poulty Building West,Gable,5,1150,9,,2,1,1,0,42,49.7,-66.5
+saqc02,saqc,Ste Anne De Bellevue,QC,A,2,Poulty Building East,Gable,27,7,960,,2,1,1,0,43,49.7,-66.5
+tron01,tron,Toronto,ON,A,1,11 Douglas Cres,Flat,0,1221,19,,0,1,1,0,29,43.7,-79.4
+tron02,tron,Toronto ,ON,A,2,21 Douglas Cres,Gable,32,912,18,,0,1,1,0,30,43.7,-79.4
+tron03,tron,Toronto,ON,C,,US Depot,,0,22752,22,,2,0,0,0,30.25,43.7,-79.4
+tron04,tron,Toronto,ON,C,,ME Garage,,0,26112,21,,2,0,0,0,30.75,43.7,-79.4
+vabc01,vabc,Vancouver,BC,A,1,BC Research Council,Flat,0,3360,32,,2,1,1,0,1,49.2,-123.1
+vabc02,vabc,Vancouver,BC,A,2,Biology Building,Flat,0,4350,30,,2,1,1,2,2,49.2,-123.1
+vabc03,vabc,Vancouver,BC,A,3,Hut M-2,Gable,25,1440,10,,1,1,0,0,3,49.2,-123.1
+wbqc01,wbqc,Wabush,QC,A,1,House 18,Gable,9,1008,10,,2,1,1,0,50,52.9,-66.9
+wbqc02,wbqc,Wabush,QC,A,2,House 9-11,Gable,9,2736,20,,2,1,1,0,51,52.9,-66.9
+wbqc03,wbqc,Wabush,QC,A,3,Cafeteria,Flat,0,,,,2,1,1,,52,52.9,-66.9
+wlon01,wlon,Waterloo,ON,A,1,254 Sunview,Gable,34,1248,10,,2,1,1,0,39,43.5,-80.5
+wlon02,wlon,Waterloo,ON,A,2,Main Eng Building,Flat,0,10368,37,,2,1,1,0,40,43.5,-80.5
+wlon03,wlon,Waterloo,ON,A,3,Engineering Building,Flat,0,8122,26,,2,1,1,0,41,43.5,-80.5
+wnmb01,wnmb,Winnipeg,MB,A,1,Library S Wing,Flat,0,4290,21,,2,0,0,8,22,49.9,-97.1
+wnmb02,wnmb,Winnipeg,MB,A,2,Agricultural Engineering Building,Gable,24,1968,21,,2,0,1,0,23,49.9,-97.1
+wnmb03,wnmb,Winnipeg,MB,C,1,US Depot,Flat,0,22752,22,,2,0,0,0,75,49.9,-97.1
+wnmb04,wnmb,Winnipeg,MB,C,2,Arch Hanger,Flat,0,35200,67,,2,0,0,0,76,49.9,-97.1
+wnmb05,wnmb,Winnipeg,MB,C,3,ME Garage,Flat,0,26112,21,,2,0,0,0,77,49.9,-97.1
+wnmb06,wnmb,Winnipeg,MB,C,4,Cant Hangar,Flat,0,127563,53,,2,0,0,0,78,49.9,-97.1

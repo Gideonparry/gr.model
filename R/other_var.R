@@ -8,9 +8,10 @@
 #' @param varval The value to give the variables
 
 
-other_var <- function(folder_path, pattern, column, varval){
+other_var <- function(folder_path, pattern, column, varval) {
   # Get the list of CSV files in the folder
-  roof_files <- list.files(path = folder_path, pattern = pattern, full.names = TRUE)
+  roof_files <- list.files(path = folder_path, pattern = pattern,
+                           full.names = TRUE)
 
   # Create an empty list to store the data frames
   data_frames <- list()
@@ -21,8 +22,8 @@ other_var <- function(folder_path, pattern, column, varval){
   }
 
 
-  for (i in seq_along(data_frames)){
-    data_frames[[i]][,column] <- varval
+  for (i in seq_along(data_frames)) {
+    data_frames[[i]][, column] <- varval
   }
   data_frames
 }

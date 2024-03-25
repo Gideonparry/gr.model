@@ -1,6 +1,6 @@
 #' Adds a header row
 #'
-#' This functions adds a header row to the date and names the colums.
+#' This functions adds a header row to the date and names the column.
 #'
 #' @param folder_path the path of the folder being edited
 #' @param existing_columns The names of the existing column
@@ -8,10 +8,12 @@
 #' @param rightdate The correct start date
 #'
 add_header <- function(folder_path, existing_colums = c("date", "value"),
-                       new_columns = c("measurement", "building_code", "mma")){
+                       new_columns = c("measurement", "building_code", "mma")) {
   # Get the list of CSV files in the folder
-  csv_files <- list.files(path = folder_path, pattern = "*.csv",
-                          full.names = TRUE)
+  csv_files <- list.files(
+    path = folder_path, pattern = "*.csv",
+    full.names = TRUE
+  )
 
   # Create an empty list to store the data frames
   data_frames <- list()
@@ -29,7 +31,7 @@ add_header <- function(folder_path, existing_colums = c("date", "value"),
 
 
   data_frames <- lapply(data_frames, function(df) {
-    df[,new_columns] <- NA
+    df[, new_columns] <- NA
     return(df)
   })
 

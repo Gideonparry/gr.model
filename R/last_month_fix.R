@@ -9,9 +9,9 @@
 #' @param diffyearright TRUE if the right month is in a different year
 
 last_month_fix <- function(data, firstmonth, wrongmonth, rightmonth, startdate,
-                          diffyearwrong = TRUE, diffyearright = TRUE){
+                           diffyearwrong = TRUE, diffyearright = TRUE) {
   ## getting number for dates
-  datevals <- as.numeric(as.Date(data[,1]))
+  datevals <- as.numeric(as.Date(data[, 1]))
 
   ## Saving the 1st date value
   val1 <- as.numeric(as.Date(startdate))
@@ -21,13 +21,13 @@ last_month_fix <- function(data, firstmonth, wrongmonth, rightmonth, startdate,
 
   ## multiplying by proper amount
   datevals <- datevals *
-    ((12*diffyearright + rightmonth + 1 - firstmonth) /
-       (12*diffyearwrong + wrongmonth + 1 - firstmonth))
+    ((12 * diffyearright + rightmonth + 1 - firstmonth) /
+      (12 * diffyearwrong + wrongmonth + 1 - firstmonth))
 
   ## Going back to origninal start date
   datevals <- datevals + val1
 
-  data[,1] <- as.Date(datevals)
+  data[, 1] <- as.Date(datevals)
 
   data
 }
