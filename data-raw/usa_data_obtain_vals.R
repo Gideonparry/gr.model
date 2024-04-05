@@ -33,3 +33,4 @@ usa_data$est_temp_avg <- terra::extract(temp_avg_map,
 
 usa_data$est_temp_avg <- usa_data$est_temp_avg - 273.15
 View(usa_data)
+write.csv(usa_data, "data-raw/usa_data.csv")

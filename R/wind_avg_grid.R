@@ -1,4 +1,4 @@
-#' Returns the rsme and median absolute error of different models
+#' Returns the average wind speed from ERA 5 data
 #'
 #' Takes train and test data and comuptes different models to compare accuracy
 #' measures
