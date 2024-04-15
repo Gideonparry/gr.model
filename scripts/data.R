@@ -273,15 +273,7 @@ summary(model1)
 
 ################## Plotting ggplot graphs #########################
 
-ggplot(gr_total[gr_total$gr <= 2, ], aes(x = logground, y = sqrtgr)) +
-  geom_point() +
-  labs(
-    title = "",
-    x = "log ground snow load",
-    y = "Sqrt(GR)"
-  ) +
-  geom_smooth(method = "lm", se = FALSE) +
-  theme_bw()
+
 
 
 ggplot(gr_total, aes(x = gr)) +
@@ -294,49 +286,26 @@ ggplot(gr_total, aes(x = gr)) +
   ) +
   theme_bw()
 
-og_hist <- ggplot(gr_total, aes(x = winter_wind)) +
+
+
+
+gr_total |>
+  ungroup() |>
+  select(`Individual Season` = winter_wind,
+         `All Aggregate` = winter_wind_all,
+         `Three Month Aggregate` = winter_wind_3month,
+         `Snow Day Aggregate` = winter_wind_snow) |>
+  tidyr::pivot_longer(cols = everything()) |>
+  ggplot(aes(x = value)) +
   geom_histogram(binwidth = 0.05, fill = "darkgrey",
                  color = "black", alpha = 0.7) +
-  labs(
-    title = "Individual season",
-    x = "winter_wind",
-    y = "Frequency"
-  ) +
-  theme_bw()
-
-all_hist <- ggplot(gr_total, aes(x = winter_wind_all)) +
-  geom_histogram(binwidth = 0.05, fill = "darkgrey",
-                 color = "black", alpha = 0.7) +
-  labs(
-    title = "All agrregate",
-    x = "winter_wind_all",
-    y = "Frequency"
-  ) +
-  theme_bw()
-
-month3_hist <- ggplot(gr_total, aes(x = winter_wind_3month)) +
-  geom_histogram(binwidth = 0.05, fill = "darkgrey",
-                 color = "black", alpha = 0.7) +
-  labs(
-    title = "3 month agrregate",
-    x = "winter_wind",
-    y = "Frequency"
-  ) +
-  theme_bw()
-
-snow_hist <- ggplot(gr_total, aes(x = winter_wind_snow)) +
-  geom_histogram(binwidth = 0.05, fill = "darkgrey",
-                 color = "black", alpha = 0.7) +
-  labs(
-    title = "Snow day agrregate",
-    x = "winter_wind",
-    y = "Frequency"
-  ) +
-  theme_bw()
-
-
-gridExtra::grid.arrange(og_hist, all_hist, month3_hist, snow_hist, ncol = 2)
-
+  ylim(0, 210) +
+  xlab("Proportion") +
+  ylab("Frequency") +
+  theme_bw() +
+  theme(text = element_text(size = 16)) +
+  facet_wrap(~ name, ncol = 2)
+dev.off()
 
 #### filer out useless colums
 colnames(gr_total)
@@ -387,6 +356,7 @@ exposure_plot <- ggplot(gr_total, aes(x = Exposure)) +
     x = "Exposure",
     y = "Frequency"
   ) +
+  ylim(0,400) +
   theme_bw()
 
 heated_plot <- ggplot(gr_total, aes(x = Heated)) +
@@ -395,10 +365,14 @@ heated_plot <- ggplot(gr_total, aes(x = Heated)) +
   labs(
     title = "",
     x = "Heated",
-    y = "Frequency"
+    y = NULL
   ) +
   scale_x_continuous(breaks = seq(0, 1, 1)) +
-  theme_bw()
+  theme_bw() +
+  ylim(0,400) +
+  theme(axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()
+  )
 
 insulated_plot <- ggplot(gr_total, aes(x = Insulated)) +
   geom_histogram(binwidth = 1, fill = "darkgrey",
@@ -409,6 +383,7 @@ insulated_plot <- ggplot(gr_total, aes(x = Insulated)) +
     y = "Frequency"
   ) +
   scale_x_continuous(breaks = seq(0, 1, 1)) +
+  ylim(0,400) +
   theme_bw()
 
 parapet_plot <- ggplot(gr_total, aes(x = Parapet)) +
@@ -417,14 +392,19 @@ parapet_plot <- ggplot(gr_total, aes(x = Parapet)) +
   labs(
     title = "",
     x = "Parapet",
-    y = "Frequency"
+    y = NULL
   ) +
   scale_x_continuous(breaks = seq(0, 1, 1)) +
-  theme_bw()
+  theme_bw()+
+  ylim(0,400) +
+  theme(axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()
+  )
 
 gridExtra::grid.arrange(exposure_plot, heated_plot, insulated_plot,
   parapet_plot,
-  ncol = 2
+  ncol = 2,
+  widths = c(54,46)
 )
 
 

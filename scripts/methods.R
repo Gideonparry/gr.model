@@ -6,6 +6,8 @@ library(rpart)
 library(rpart.plot)
 library(car)
 library(cowplot)
+library(RColorBrewer)
+library(partykit)
 
 # version 1 of data
 # gr_total <- read.csv("data-raw//wind_all.csv")
@@ -15,8 +17,8 @@ gr_total <- read.csv("data-raw//updated_data.csv")
 
 
 
-
-
+null_model <- lm(sqrtgr ~ 1, gr_total)
+summary(null_model)
 
 ## running models with wind
 model1 <- lm(sqrtgr ~ logground, gr_total)
@@ -29,6 +31,23 @@ summary(model2)
 summary(model3)
 summary(model4)
 summary(model5)
+
+
+
+ggplot(gr_total[gr_total$gr <= 2, ], aes(x = logground, y = sqrtgr)) +
+  geom_point() +
+  labs(
+    title = "",
+    x = "log ground snow load",
+    y = expression(sqrt(g[r]))
+  ) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1.5) +
+  geom_abline(intercept = 0.63, slope = -0.12, color = "red", linewidth = 1.5) +
+  theme_bw()  +
+  theme(
+    axis.text = element_text(size = 12, face = "bold"),
+    axis.title = element_text(size = 14, face = "bold")
+  )
 
 
 ### Now running model with ERA5 wind
@@ -56,8 +75,11 @@ tree <- rpart(formula = resid ~ ., data = resid_no_na)
 prp(tree)
 
 pruned_tree <- prune(tree, cp = 0.04)
-prp(pruned_tree)
 
+
+# Plot the tree
+plot(pruned_tree)
+text(pruned_tree, use.n=FALSE, pretty = TRUE)
 
 
 ## Setting up
@@ -105,6 +127,10 @@ best_model <- glmnet(x, y, alpha = 1, lambda = best_lambda)
 coef(best_model)
 
 
+remove_model <- glmnet(x, y, alpha = 1, lambda = 0.002)
+coef(remove_model)
+
+
 cv_model2 <- cv.glmnet(x, y, alpha = 0.5)
 
 
@@ -122,14 +148,17 @@ ggplot(na.omit(gr_total[,c("Exposure", "sqrtgr")]),
        aes(x = sqrtgr, color = factor(Exposure,
                                       levels = unique(gr_total$Exposure),
                                       labels =
-                                        c("exposed", "normal", "sheltered")))) +
-  geom_density(alpha = 0.5) +
-  labs(title = "Density Plot of sqrtgr by Exposure Level",
-       x = "sqrtgr",
+                                        c("exposed", "sheltered", "normal")))) +
+  geom_density(alpha = 0.5, linewidth = 1) +
+  labs(
+       x = expression(sqrt(g[r])),
        y = "Density",
        fill = "Exposure") +
   theme_bw() +
-  scale_color_discrete(name = "Exposure")
+  scale_color_brewer(palette = "Dark2", name = "Exposure")  +
+  theme(legend.position = c(0.9, 0.8))
+
+
 
 
 
@@ -421,3 +450,6 @@ era_temp <- lm(
 )
 summary(era_temp)
 
+
+sum(is.na(gr_total$winter_wind_all))
+sum(is.na(gr_total$est_wind))
