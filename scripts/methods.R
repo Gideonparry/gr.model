@@ -42,11 +42,16 @@ ggplot(gr_total[gr_total$gr <= 2, ], aes(x = logground, y = sqrtgr)) +
     y = expression(sqrt(g[r]))
   ) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 1.5) +
-  geom_abline(intercept = 0.63, slope = -0.12, color = "red", linewidth = 1.5) +
-  theme_bw()  +
+  geom_segment(aes(x = min(logground), y = min(logground) * -0.12 + 0.63,
+                   xend = 0.87, yend = 0.87 * -0.12 + 0.63),
+               color = "red", linewidth = 1.5) +
+  geom_segment(aes(x = 0.87, y = 0.87 * -0.12 + 0.63, xend = max(logground),
+                   yend = 0.87 * -0.12 + 0.63),
+               color = "red", linewidth = 1.5) +
+  theme_bw() +
   theme(
     axis.text = element_text(size = 12, face = "bold"),
-    axis.title = element_text(size = 14, face = "bold")
+    axis.title = element_text(size = 16, face = "bold")
   )
 
 

@@ -18,10 +18,12 @@ full_rtl <- read.csv("data-raw/final_table_trial.csv") |>
   dplyr::mutate(RT_IV = RT_IV*.04788) |>
   dplyr::left_join(new_rtl, by = "CLUST") |>
   dplyr::left_join(new_rtl_shelt, by = "CLUST") |>
-  dplyr::mutate(RATIO2 = RT_II/RT_2_new) |>
-  dplyr::mutate(RATIO4 = RT_IV/RT_4_new) |>
-  dplyr::mutate(RATIO2s = RT_2_new/RT_2_shelt) |>
-  dplyr::mutate(RATIO4s = RT_4_new/RT_4_shelt)
+  dplyr::mutate(RATIO2 = RT_2_new/RT_II) |>
+  dplyr::mutate(RATIO4 = RT_4_new/RT_IV) |>
+  dplyr::mutate(RATIO2s = RT_2_shelt/RT_2_new) |>
+  dplyr::mutate(RATIO4s = RT_4_shelt/RT_4_new)
+
+
 
 
 
@@ -33,13 +35,82 @@ full_rtl |>
   ggplot(aes(x = value)) +
   geom_histogram(binwidth = 0.0175, fill = "darkgrey",
                  color = "black", alpha = 0.7) +
-  ylim(0, 1700) +
+  ylim(0, 2500) +
   xlab("Ratio") +
   ylab("Frequency") +
   theme_bw() +
   theme(text = element_text(size = 16)) +
   facet_wrap(~ name, ncol = 1)
 dev.off()
+
+
+
+## Creating figure
+gr_total <- read.csv("data-raw//updated_data.csv")
+usa_data <- read.csv("data-raw//usa_data.csv")
+era_both <- lm(
+  sqrtgr ~ logground + roofflat + sheltered + est_wind +
+    est_temp_avg + logsize + Parapet +
+    roofflat:est_wind + roofflat:sheltered, gr_total
+)
+summary(era_both)
+
+# getting quartiles
+
+summary(usa_data$w2)
+# temp was obtined from ERA 5 for simulations, but median is used to create the
+# lines.
+
+summary(usa_data$est_temp_avg)
+
+
+q1_w <- 0.1158
+q2_w <- 0.2255
+q3_w <- 0.3702
+
+q1_t <- 0.3697
+q2_t <- 4.0384
+q3_t <- 8.0230
+
+## Setting the slope
+sl <- -0.092911
+
+## Intercept and slope for 1st quartiles. Going highest to lowest GR values
+int1 <- (0.541586 + 0.088120 + q1_w*-0.218706 + q3_t*0.003875 + 0.004538*5.913
+         - q1_w*0.031244)
+
+int2 <- (0.541586 + 0.088120 + q2_w*-0.218706 +q2_t*0.003875 + 0.004538*5.913
+         - q2_w*0.031244)
+
+int3 <- (0.541586 + 0.088120 + q3_w*-0.218706 + q1_t*0.003875 + 0.004538*5.913
+         - q3_w*0.031244)
+
+
+
+
+ggplot(gr_total, aes(x = logground, y = sqrtgr)) +
+  geom_point() +
+  labs(
+    title = "",
+    x = "log ground snow load",
+    y = expression(sqrt(g[r]))
+  ) +
+  geom_abline(intercept = int1, slope = sl, color = "#1b9e77", linewidth = 1.5,
+              linetype = "dashed") +
+  geom_abline(intercept = int3, slope = sl, color = "#7570b3", linewidth = 1.5,
+              linetype = "dashed") +
+  geom_segment(aes(x = min(logground), y = min(logground) * -0.12 + 0.63,
+                   xend = 0.87, yend = 0.87 * -0.12 + 0.63),
+               color = "#d95f02", linewidth = 1.5) +
+  geom_segment(aes(x = 0.87, y = 0.87 * -0.12 + 0.63, xend = max(logground),
+                   yend = 0.87 * -0.12 + 0.63),
+               color = "#d95f02", linewidth = 1.5) +
+  scale_color_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(
+    axis.text = element_text(size = 12, face = "bold"),
+    axis.title = element_text(size = 16, face = "bold")
+  )
 
 
 ## sheltered vs non sheltered
@@ -50,7 +121,7 @@ full_rtl |>
   ggplot(aes(x = value)) +
   geom_histogram(binwidth = 0.0175, fill = "darkgrey",
                  color = "black", alpha = 0.7) +
-  ylim(0, 1000) +
+  ylim(0, 500) +
   xlab("Ratio") +
   ylab("Frequency") +
   theme_bw() +
@@ -63,7 +134,7 @@ full_rtl_box <- full_rtl |>
   dplyr::mutate(ECO3 = substr(ECO3, 1, regexpr("\\.", ECO3) - 1)) |>
   dplyr:: mutate(ECO3 = factor(ECO3, levels = c("5", "6", "7", "8", "9", "10",
                                         "11", "12", "13"))) |>
-  dplyr::mutate(RATIO22 = RT_II/RT_2_shelt)
+  dplyr::mutate(RATIO22 = RT_2_shelt/RT_II)
 
 
 
@@ -78,11 +149,17 @@ ggplot(full_rtl_long, aes(x = ECO3, y = Value, fill = Variable)) +
   geom_vline(xintercept = seq(1.5, 12.5, 1), linetype = "solid",
              color = "gray50") +
   labs(title = NULL,
-       x = "ECO3",
+       x = "Level 1 Ecological Regions",
        y = "Ratio") +
   theme_bw() +
   theme(legend.title = element_blank(),
+        legend.position = "bottom",
         axis.text = element_text(size = 12, face = "bold"),
         axis.title = element_text(size = 16, face = "bold"))
 
+## sample sizes
+summary(full_rtl_box$ECO3)
+
+mean(full_rtl$RATIO2)
+mean(full_rtl_box$RATIO22)
 
