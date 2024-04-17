@@ -51,7 +51,7 @@ ggplot(gr_total[gr_total$gr <= 2, ], aes(x = logground, y = sqrtgr)) +
   theme_bw() +
   theme(
     axis.text = element_text(size = 12, face = "bold"),
-    axis.title = element_text(size = 16, face = "bold")
+    axis.title = element_text(size = 12, face = "bold")
   )
 
 

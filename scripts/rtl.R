@@ -109,7 +109,7 @@ ggplot(gr_total, aes(x = logground, y = sqrtgr)) +
   theme_bw() +
   theme(
     axis.text = element_text(size = 12, face = "bold"),
-    axis.title = element_text(size = 16, face = "bold")
+    axis.title = element_text(size = 12, face = "bold")
   )
 
 
@@ -143,6 +143,7 @@ full_rtl_long <- pivot_longer(full_rtl_box, cols = c(RATIO2, RATIO22),
 
 # Create the combined plot with facet wrapping
 ggplot(full_rtl_long, aes(x = ECO3, y = Value, fill = Variable)) +
+  geom_hline(yintercept = 1.0, linetype = "dashed", color = "black") +
   geom_boxplot(position = position_dodge(width = 0.75)) +
   scale_fill_brewer(palette = "Dark2",
                     labels = c("Non Sheltered", "Sheltered")) +
@@ -155,7 +156,9 @@ ggplot(full_rtl_long, aes(x = ECO3, y = Value, fill = Variable)) +
   theme(legend.title = element_blank(),
         legend.position = "bottom",
         axis.text = element_text(size = 12, face = "bold"),
-        axis.title = element_text(size = 16, face = "bold"))
+        axis.title = element_text(size = 12, face = "bold")) +
+  scale_y_continuous(breaks = seq(0.8, 1.8, 0.1))
+
 
 ## sample sizes
 summary(full_rtl_box$ECO3)
