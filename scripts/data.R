@@ -2,6 +2,8 @@ library(GGally)
 library(ggplot2)
 library(dplyr)
 library(lubridate)
+library(gr.model)
+
 
 data <- read.csv("data-raw\\complete_data.csv")
 metadata <- read.csv("data-raw\\gr_meta_ca_all.csv")

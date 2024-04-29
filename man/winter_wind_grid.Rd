@@ -2,7 +2,7 @@
 % Please edit documentation in R/winter_wind_grid.R
 \name{winter_wind_grid}
 \alias{winter_wind_grid}
-\title{Returns the rsme and median absolute error of different models}
+\title{Returns the w2 parameter of ERA5 data}
 \usage{
 winter_wind_grid(file, var1 = "u10", var2 = "v10")
 }

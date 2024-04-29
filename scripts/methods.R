@@ -83,7 +83,7 @@ pruned_tree <- prune(tree, cp = 0.04)
 
 
 # Plot the tree
-plot(pruned_tree)
+prp(pruned_tree)
 text(pruned_tree, use.n=FALSE, pretty = TRUE)
 
 

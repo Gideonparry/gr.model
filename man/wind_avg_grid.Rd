@@ -2,7 +2,7 @@
 % Please edit documentation in R/wind_avg_grid.R
 \name{wind_avg_grid}
 \alias{wind_avg_grid}
-\title{Returns the rsme and median absolute error of different models}
+\title{Returns the average wind speed from ERA 5 data}
 \usage{
 wind_avg_grid(file, var1 = "u10", var2 = "v10")
 }

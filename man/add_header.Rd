@@ -20,5 +20,5 @@ add_header(
 \item{rightdate}{The correct start date}
 }
 \description{
-This functions adds a header row to the date and names the colums.
+This functions adds a header row to the date and names the column.
 }

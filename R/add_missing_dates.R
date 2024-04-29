@@ -5,6 +5,9 @@
 #'
 #'
 #' @import dplyr
+#'
+#'
+#' @export
 
 add_missing_dates <- function(df) {
   # Create a sequence of dates covering the entire range

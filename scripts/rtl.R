@@ -38,6 +38,7 @@ full_rtl |>
   ylim(0, 2500) +
   xlab("Ratio") +
   ylab("Frequency") +
+  geom_vline(xintercept = 1.0, color = "black", linetype = "dashed") +
   theme_bw() +
   theme(text = element_text(size = 16)) +
   facet_wrap(~ name, ncol = 1)
