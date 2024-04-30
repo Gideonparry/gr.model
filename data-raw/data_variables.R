@@ -1,4 +1,7 @@
-folder_path <- "C:/Users/bean_student/Documents/GraphData/all_data"
+library(stringr)
+library(dplyr)
+
+folder_path <- "all_data"
 pattern <- "_[[:alpha:]]{3,}\\.csv"
 
 # Get the list of CSV files in the folder
@@ -25,9 +28,9 @@ for (i in seq_along(N)){
 
 
 ####################### Adding city code to other data. ########################
-library(stringr)
 
-folder_path <- "C:/Users/bean_student/Documents/GraphData/all_data"
+
+folder_path <- "all_data"
 pattern <- "_[[:alpha:]]\\d[[:alpha:]]?\\.csv"
 
 # Get the list of CSV files in the folder
@@ -60,8 +63,8 @@ for (i in seq_along(N)){
 
 
 ######################## binding all data #####################################
-library(dplyr)
-folder_path <- "C:/Users/bean_student/Documents/GraphData/all_data"
+
+folder_path <- "all_data"
 
 pattern <- "*.csv"
 
@@ -77,7 +80,7 @@ for (file in data_files) {
 }
 complete_data <- bind_rows(data_frames)
 write.table(complete_data,
-            file = "C:\\Users\\bean_student\\Documents\\GraphData\\complete_data.csv",
+            file = "complete_data.csv",
             row.names = FALSE,
             col.names = TRUE,
             sep=",")
