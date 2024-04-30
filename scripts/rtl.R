@@ -28,6 +28,7 @@ full_rtl <- read.csv("data-raw/final_table_trial.csv") |>
 
 
 ### old vs new models
+# Fig 4.1
 full_rtl |>
   dplyr::select("RT II" = RATIO2,
          "RT IV" = RATIO4) |>
@@ -88,7 +89,7 @@ int3 <- (0.541586 + 0.088120 + q3_w*-0.218706 + q1_t*0.003875 + 0.004538*5.913
 
 
 
-
+# Fig 4.2
 ggplot(gr_total, aes(x = logground, y = sqrtgr)) +
   geom_point() +
   labs(
@@ -115,6 +116,7 @@ ggplot(gr_total, aes(x = logground, y = sqrtgr)) +
 
 
 ## sheltered vs non sheltered
+# Fig 4.3
 full_rtl |>
   dplyr::select("RT II" = RATIO2s,
          "RT IV" = RATIO4s) |>
@@ -144,6 +146,7 @@ full_rtl_long <- pivot_longer(full_rtl_box, cols = c(RATIO2, RATIO22),
                               names_to = "Variable", values_to = "Value")
 
 # Create the combined plot with facet wrapping
+# Fig 4.5
 ggplot(full_rtl_long, aes(x = ECO3, y = Value, fill = Variable)) +
   geom_hline(yintercept = 1.0, linetype = "dashed", color = "black") +
   geom_boxplot(position = position_dodge(width = 0.75)) +

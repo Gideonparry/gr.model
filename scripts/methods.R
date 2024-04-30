@@ -26,14 +26,19 @@ model2 <- lm(sqrtgr ~ logground + winter_wind, gr_total)
 model3 <- lm(sqrtgr ~ logground + winter_wind_all, gr_total)
 model4 <- lm(sqrtgr ~ logground + winter_wind_3month, gr_total)
 model5 <- lm(sqrtgr ~ logground + winter_wind_snow, gr_total)
+
+## Equation 3.1
 summary(model1)
+
+## Table 3.1
 summary(model2)
+# eq 3.2
 summary(model3)
 summary(model4)
 summary(model5)
 
 
-
+# Figure 3.1
 ggplot(gr_total[gr_total$gr <= 2, ], aes(x = logground, y = sqrtgr)) +
   geom_point() +
   labs(
@@ -57,6 +62,7 @@ ggplot(gr_total[gr_total$gr <= 2, ], aes(x = logground, y = sqrtgr)) +
 
 ### Now running model with ERA5 wind
 model_grid <- lm(sqrtgr ~ logground + est_wind, gr_total)
+## Eq. 3.3
 summary(model_grid)
 
 ## obtaining resids from original model
@@ -83,6 +89,7 @@ pruned_tree <- prune(tree, cp = 0.04)
 
 
 # Plot the tree
+# fig 3.2
 prp(pruned_tree)
 text(pruned_tree, use.n=FALSE, pretty = TRUE)
 
@@ -149,6 +156,7 @@ coef(best_model2)
 ################################################################################
 
 #Density plots of each exposure level with GR
+## Fig 3.2
 ggplot(na.omit(gr_total[,c("Exposure", "sqrtgr")]),
        aes(x = sqrtgr, color = factor(Exposure,
                                       levels = unique(gr_total$Exposure),
@@ -250,6 +258,7 @@ weather_cont <- ggpairs(gr_total |> dplyr::select(
 
 
 
+## Fig 3.4
 cowplot::plot_grid(
   GGally::ggmatrix_gtable(non_weather_cont),
   GGally::ggmatrix_gtable(weather_cont),
@@ -275,6 +284,8 @@ summary(mod1)
 
 ######################## Residual and QQ plot ################################
 
+
+## Fig 3.5
 resid_gg <- ggplot(mod1, aes(x = .fitted, y = .resid)) +
   geom_point() +
   geom_hline(yintercept = 0) +
@@ -293,6 +304,7 @@ qq_data <- qqplot(qnorm(ppoints(length(residuals))), residuals)
 qq_data_df <- data.frame(Theoretical = qq_data$x, Residuals = qq_data$y)
 
 # Plot the QQ plot using ggplot2
+## Fig 3.5
 qq_gg <- ggplot(qq_data_df, aes(x = Theoretical, y = Residuals)) +
   geom_point() +
   geom_abline(intercept = mean(residuals), slope = sd(residuals)) +
@@ -400,7 +412,9 @@ gridExtra::grid.arrange(resid_gg3, qq_gg3, ncol = 2)
 shapiro.test(mod3$residuals)
 
 ################################################################################
+## Table 3.5
 summary(mod1)
+# Eq. 3.6
 summary(mod2)
 summary(mod3)
 
@@ -435,6 +449,7 @@ summary(build_backward)
 #### Drop slope due to insignificance and having roofflat
 build_mod <- lm(formula = sqrtgr ~ logground + logsize + Parapet + roofflat +
      sheltered + roofflat:sheltered, data = gr_total)
+# Eq 3.5
 summary(build_mod)
 
 ### Using ERA 5 for weather
@@ -445,7 +460,7 @@ era_both <- lm(
     roofflat:est_wind + roofflat:sheltered, gr_total
 )
 
-
+# Eq 4.1
 summary(era_both)
 
 era_temp <- lm(

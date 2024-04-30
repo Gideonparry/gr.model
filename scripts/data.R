@@ -276,7 +276,7 @@ summary(model1)
 ################## Plotting ggplot graphs #########################
 
 
-
+#### Figure 2.2
 
 ggplot(gr_total, aes(x = gr)) +
   geom_histogram(binwidth = 0.1, fill = "darkgrey",
@@ -289,8 +289,24 @@ ggplot(gr_total, aes(x = gr)) +
   theme_bw()
 
 
+## Figure 2.3
+
+ggplot(gr_total[gr_total$gr <= 2, ], aes(x = logground, y = sqrtgr)) +
+  geom_point() +
+  labs(
+    title = "",
+    x = "log ground snow load",
+    y = expression(sqrt(g[r]))
+  ) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1.5) +
+  theme_bw() +
+  theme(
+    axis.text = element_text(size = 12, face = "bold"),
+    axis.title = element_text(size = 12, face = "bold")
+  )
 
 
+## Figure 2.4
 gr_total |>
   ungroup() |>
   select(`Individual Season` = winter_wind,
@@ -326,6 +342,9 @@ gr_total_seleted <- gr_total |> select(
 ### More plots
 
 
+
+
+## Figure 2.5
 colnames(gr_total_seleted)
 ggpairs(gr_total_seleted[c(3, 5, 15:16)]) + theme_bw() +
   theme(
@@ -334,7 +353,7 @@ ggpairs(gr_total_seleted[c(3, 5, 15:16)]) + theme_bw() +
     axis.ticks = element_blank()
   )
 
-
+## Figure 2.6
 ggpairs(gr_total_seleted[c(3, 6, 20)]) + theme_bw() +
   theme(
     axis.text.y = element_blank(),
@@ -342,13 +361,14 @@ ggpairs(gr_total_seleted[c(3, 6, 20)]) + theme_bw() +
     axis.ticks = element_blank()
   )
 
-
+## Figure 2.7
 ggpairs(gr_total_seleted[c(3, 8, 10)]) + theme_bw() +
   theme(
     axis.text.y = element_blank(),
     axis.text.x = element_blank(),
     axis.ticks = element_blank()
   )
+
 
 exposure_plot <- ggplot(gr_total, aes(x = Exposure)) +
   geom_histogram(binwidth = 1, fill = "darkgrey",
@@ -403,6 +423,8 @@ parapet_plot <- ggplot(gr_total, aes(x = Parapet)) +
         axis.ticks.y=element_blank()
   )
 
+
+## Figure 2.8
 gridExtra::grid.arrange(exposure_plot, heated_plot, insulated_plot,
   parapet_plot,
   ncol = 2,
@@ -530,6 +552,8 @@ temp_avg_scat <- ggplot(gr_total, aes(x = temp_avg, y = est_temp_avg)) +
   theme_bw()
 
 
+
+## Figure 2.9
 gridExtra::grid.arrange(wind_avg_scat, w2_scat, temp_avg_scat, ncol = 3)
 ### version 2 of data
 # write.csv(gr_total, "data-raw//updated_data.csv")
