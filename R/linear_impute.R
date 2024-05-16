@@ -5,6 +5,7 @@
 #'
 #'
 #' @import dplyr
+#' @export
 
 # Define a custom imputation function
 linear_impute <- function(vec) {
