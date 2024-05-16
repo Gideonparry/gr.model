@@ -49,10 +49,11 @@ ggplot(gr_total[gr_total$gr <= 2, ], aes(x = logground, y = sqrtgr)) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 1.5) +
   geom_segment(aes(x = min(logground), y = min(logground) * -0.12 + 0.63,
                    xend = 0.87, yend = 0.87 * -0.12 + 0.63),
-               color = "red", linewidth = 1.5) +
+               color = "#d95f02", linewidth = 1.5) +
   geom_segment(aes(x = 0.87, y = 0.87 * -0.12 + 0.63, xend = max(logground),
                    yend = 0.87 * -0.12 + 0.63),
-               color = "red", linewidth = 1.5) +
+               color = "#d95f02", linewidth = 1.5) +
+  scale_color_brewer(palette = "Dark2") +
   theme_bw() +
   theme(
     axis.text = element_text(size = 12, face = "bold"),
@@ -91,7 +92,7 @@ pruned_tree <- prune(tree, cp = 0.04)
 # Plot the tree
 # fig 3.2
 prp(pruned_tree)
-text(pruned_tree, use.n=FALSE, pretty = TRUE)
+
 
 
 ## Setting up

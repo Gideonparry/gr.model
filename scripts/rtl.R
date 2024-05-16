@@ -107,7 +107,7 @@ ggplot(gr_total, aes(x = logground, y = sqrtgr)) +
   geom_segment(aes(x = 0.87, y = 0.87 * -0.12 + 0.63, xend = max(logground),
                    yend = 0.87 * -0.12 + 0.63),
                color = "#d95f02", linewidth = 1.5) +
-  scale_color_brewer(palette = "Dark2")+
+  scale_color_brewer(palette = "Dark2") +
   theme_bw() +
   theme(
     axis.text = element_text(size = 12, face = "bold"),
