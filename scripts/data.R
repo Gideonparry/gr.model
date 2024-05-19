@@ -531,6 +531,9 @@ wind_avg_scat <- ggplot(gr_total, aes(x = wind_avg, y = est_wind_avg)) +
     x = "Canadian Average wind",
     y = "Gridded average wind"
   ) +
+  xlim(3, 15) +
+  ylim(3, 15) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "blue") +
   theme_bw()
 
 w2_scat <- ggplot(gr_total, aes(x = winter_wind_all, y = est_wind)) +
@@ -540,6 +543,9 @@ w2_scat <- ggplot(gr_total, aes(x = winter_wind_all, y = est_wind)) +
     x = "Canadian W2",
     y = "Gridded W2"
   ) +
+  xlim(0, 1) +
+  ylim(0, 1) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "blue") +
   theme_bw()
 
 temp_avg_scat <- ggplot(gr_total, aes(x = temp_avg, y = est_temp_avg)) +
@@ -549,6 +555,9 @@ temp_avg_scat <- ggplot(gr_total, aes(x = temp_avg, y = est_temp_avg)) +
     x = "Canadian Average temp",
     y = "Gridded average temp"
   ) +
+  xlim(-25, 5) +
+  ylim(-25, 5) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "blue") +
   theme_bw()
 
 
