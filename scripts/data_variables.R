@@ -1,11 +1,16 @@
 library(stringr)
 library(dplyr)
 
+# This file takes all of the csv files for each figure and aggragates them to
+# A single data file
+
+
 folder_path <- "all_data"
 pattern <- "_[[:alpha:]]{3,}\\.csv"
 
 # Get the list of CSV files in the folder
-data_files <- list.files(path = folder_path, pattern = pattern, full.names = TRUE)
+data_files <- list.files(path = folder_path, pattern = pattern,
+                         full.names = TRUE)
 
 # Create an empty list to store the data frames
 data_frames <- list()
@@ -34,7 +39,8 @@ folder_path <- "all_data"
 pattern <- "_[[:alpha:]]\\d[[:alpha:]]?\\.csv"
 
 # Get the list of CSV files in the folder
-data_files <- list.files(path = folder_path, pattern = pattern, full.names = TRUE)
+data_files <- list.files(path = folder_path, pattern = pattern,
+                         full.names = TRUE)
 
 # Create an empty list to store the data frames
 data_frames <- list()
@@ -69,7 +75,8 @@ folder_path <- "all_data"
 pattern <- "*.csv"
 
 # Get the list of CSV files in the folder
-data_files <- list.files(path = folder_path, pattern = pattern, full.names = TRUE)
+data_files <- list.files(path = folder_path, pattern = pattern,
+                         full.names = TRUE)
 
 # Create an empty list to store the data frames
 data_frames <- list()

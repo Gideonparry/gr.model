@@ -4,6 +4,8 @@ library(dplyr)
 library(lubridate)
 library(gr.model)
 
+# This file takes the aggragated data and consolidates it and derives variables
+# Needed to perfom modeling of Gr
 
 data <- read.csv("data-raw\\complete_data.csv")
 metadata <- read.csv("data-raw\\gr_meta_ca_all.csv")

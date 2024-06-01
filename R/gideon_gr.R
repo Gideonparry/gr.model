@@ -1,3 +1,20 @@
+#' Helps create RTL simulations
+#'
+#'
+#' @param snow_loads a simulated set of snow loads, using existing functions in rtsnow.
+#' @param data dataset with exactly one row that contains the building and wind statistics necessary to run your model
+#' @param tlm linear model that you have previously fit, and you can save this as .Rdata file, that you load when you run the script
+#' @param cap Do not let the simulated value exceed the cap (in this case = 1) cap should also be bounded below by zero.
+#' @param flat_line set value, for comparison purposes, the mean of the distribution cannot fall below this value.
+#' @param se The standard error for the model
+#' @param sheltered 1 if shelteded, 0 if not
+#' @param Parapet 1 if roof contains parapet, 0 if not
+#' @param logsize log of area of the roof
+#' @param rooffalt 1 if roof is flat (0 degrees), 0 if not
+#'
+#'
+#' @export
+
 model_gr <- function(snow_loads, tdata, tlm, cap = 1, flat_line = 0.2,
                      metric_adjust = 1, se = 0.1625, sheltered = 0,
                       Parapet = 0, logsize = 5.913,
@@ -55,4 +72,3 @@ model_gr <- function(snow_loads, tdata, tlm, cap = 1, flat_line = 0.2,
   pmin(pmax(final_sim, 0)^2, cap)
 
 }
-load("data-raw/distfit.rdata")

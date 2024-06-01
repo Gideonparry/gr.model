@@ -1,4 +1,4 @@
-## Modeling work
+
 library(glmnet)
 library(GGally)
 library(ggplot2)
@@ -9,8 +9,10 @@ library(cowplot)
 library(RColorBrewer)
 library(partykit)
 
-# version 1 of data
-# gr_total <- read.csv("data-raw//wind_all.csv")
+## Modeling work. This shows what was done to create the models used in the
+# Thesis
+
+
 
 # version 2 of data
 gr_total <- read.csv("data-raw//updated_data.csv")

@@ -2,6 +2,7 @@
 
 export(add_missing_dates)
 export(linear_impute)
+export(model_gr)
 import(Metrics)
 import(dplyr)
 import(randomForest)

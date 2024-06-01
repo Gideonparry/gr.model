@@ -1,12 +1,15 @@
 Package: gr.model
-Title: What the Package Does (One Line, Title Case)
+Title: Improving GR Estimations with digitized records
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+    person("Gideon", "Parry", , "gideonparry@protonmail.com", 
+    role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Description: This package shows how the digitized data from the Canadian data
+  is cleaned to make use of data in modeling. It starts with converting the 
+  digiized data to one file, then cleaning that, then creating models. It also
+  shows how to Gr is modeled, and uses applications of this modeling.
+License: AGPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
