@@ -13,11 +13,9 @@ add_header(
 \arguments{
 \item{folder_path}{the path of the folder being edited}
 
-\item{existing_columns}{The names of the existing column}
+\item{existing_colums}{The names of the existing column}
 
-\item{new_colums}{The names of the new columns}
-
-\item{rightdate}{The correct start date}
+\item{new_columns}{The names of the new columns}
 }
 \description{
 This functions adds a header row to the date and names the column.

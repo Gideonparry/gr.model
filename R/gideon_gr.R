@@ -2,7 +2,7 @@
 #'
 #'
 #' @param snow_loads a simulated set of snow loads, using existing functions in rtsnow.
-#' @param data dataset with exactly one row that contains the building and wind statistics necessary to run your model
+#' @param tdata dataset with exactly one row that contains the building and wind statistics necessary to run your model
 #' @param tlm linear model that you have previously fit, and you can save this as .Rdata file, that you load when you run the script
 #' @param cap Do not let the simulated value exceed the cap (in this case = 1) cap should also be bounded below by zero.
 #' @param flat_line set value, for comparison purposes, the mean of the distribution cannot fall below this value.
@@ -10,7 +10,8 @@
 #' @param sheltered 1 if shelteded, 0 if not
 #' @param Parapet 1 if roof contains parapet, 0 if not
 #' @param logsize log of area of the roof
-#' @param rooffalt 1 if roof is flat (0 degrees), 0 if not
+#' @param roofflat 1 if roof is flat (0 degrees), 0 if not
+#' @param metric_adjust Adjusts units to metric system
 #'
 #'
 #' @export

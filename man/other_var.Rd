@@ -11,9 +11,9 @@ other_var(folder_path, pattern, column, varval)
 
 \item{pattern}{The pattern for the files chosen}
 
-\item{varval}{The value to give the variables}
+\item{column}{The column number to make the update to}
 
-\item{colum}{The column number to make the update to}
+\item{varval}{The value to give the variables}
 }
 \description{
 takes files based on pattern and saves all rows of a variable

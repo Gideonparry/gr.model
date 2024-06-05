@@ -1,7 +1,7 @@
 #' Imputes data linearly
 #'
 #'
-#' @param df The data imputes linearly
+#' @param vec The vector to impute linearly
 #'
 #'
 #' @import dplyr

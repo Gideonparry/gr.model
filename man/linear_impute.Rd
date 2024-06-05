@@ -7,7 +7,7 @@
 linear_impute(vec)
 }
 \arguments{
-\item{df}{The data imputes linearly}
+\item{vec}{The vector to impute linearly}
 }
 \description{
 Imputes data linearly

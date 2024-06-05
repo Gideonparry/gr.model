@@ -17,7 +17,7 @@
 
 gr_cv <- function(train_data, test_data,
                   formula1 = "sqrtgr ~ logground",
-                  forumula2 = "sqrtgr ~ logground + roofflat*Exposure +
+                  formula2 = "sqrtgr ~ logground + roofflat*Exposure +
                   roofflat*winter_wind +
                    log(Size) + temp_avg + Heated + Parapet",
                   rf_formula = gr ~ ground_max + roofflat + Exposure +
@@ -30,7 +30,7 @@ gr_cv <- function(train_data, test_data,
 
   # Following the process with the linear model
   lin_mod <- stats::lm(
-    formula = forumula2,
+    formula = formula2,
     data = train_data
   )
   lin_pred <- stats::predict(lin_mod, test_data)

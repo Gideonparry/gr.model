@@ -4,10 +4,11 @@
 #' measures
 #'
 #' @param data The full data to perform models on
-#' @param seed The Random number seed used to partition data
 #' @param formula1 The 1st formula to use. Default is logground
 #' @param formula2 The 2nd fromula to use Returns as "new model"
 #' @param rf_formula The formula to use for the random forest
+#' @param k Number of Cross Validation folds
+#'
 #'
 #' @import randomForest
 #' @import stats
@@ -35,7 +36,7 @@ acc_test <- function(data, k = 5,
     test_data[[i]] <- data[data$building_code %in% test_build[[i]],]
     fold_results[[i]] <- gr_cv(train_data[[i]], test_data[[i]],
                                formula1 = formula1,
-                               forumula2 = formula2,
+                               formula2 = formula2,
                                rf_formula = rf_formula)
   }
 
@@ -69,7 +70,7 @@ acc_test <- function(data, k = 5,
     obs_test_data[[i]] <- data[obs_nums == i,]
     obs_fold_results[[i]] <- gr_cv(obs_train_data[[i]], obs_test_data[[i]],
                                    formula1 = formula1,
-                                   forumula2 = formula2,
+                                   formula2 = formula2,
                                    rf_formula = rf_formula)
   }
 

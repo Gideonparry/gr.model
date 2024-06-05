@@ -11,7 +11,7 @@ code_var(path, folder, column)
 
 \item{folder}{The names of the subfolder}
 
-\item{colum}{The column number to make the update to}
+\item{column}{The column number to make the update to}
 }
 \description{
 Takes the folder name and sets the code variable based on that

@@ -4,7 +4,7 @@
 #' measures
 #'
 #' @param data The full data to perform models on
-#' @param seed The Random number seed used to partition data
+#' @param k Number of Cross Validation folds
 #' @param formula1 The 1st formula to use. Default is logground
 #' @param formula2 The 2nd fromula to use Returns as "new model"
 #' @param rf_formula The formula to use for the random forest

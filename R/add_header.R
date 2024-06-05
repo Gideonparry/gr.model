@@ -3,9 +3,9 @@
 #' This functions adds a header row to the date and names the column.
 #'
 #' @param folder_path the path of the folder being edited
-#' @param existing_columns The names of the existing column
-#' @param new_colums The names of the new columns
-#' @param rightdate The correct start date
+#' @param existing_colums The names of the existing column
+#' @param new_columns The names of the new columns
+#' @importFrom utils read.csv
 #'
 add_header <- function(folder_path, existing_colums = c("date", "value"),
                        new_columns = c("measurement", "building_code", "mma")) {

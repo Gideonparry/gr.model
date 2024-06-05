@@ -16,13 +16,13 @@ cross_valid_acc(
 \arguments{
 \item{data}{The full data to perform models on}
 
+\item{k}{Number of Cross Validation folds}
+
 \item{formula1}{The 1st formula to use. Default is logground}
 
 \item{formula2}{The 2nd fromula to use Returns as "new model"}
 
 \item{rf_formula}{The formula to use for the random forest}
-
-\item{seed}{The Random number seed used to partition data}
 }
 \description{
 Takes train and test data and comuptes different models to compare accuracy

@@ -4,7 +4,8 @@
 #'
 #' @param path the path of the folder containing the subfolder
 #' @param folder The names of the subfolder
-#' @param colum The column number to make the update to
+#' @param column The column number to make the update to
+#' @importFrom utils read.csv
 
 
 

@@ -21,11 +21,15 @@ model_gr(
 \arguments{
 \item{snow_loads}{a simulated set of snow loads, using existing functions in rtsnow.}
 
+\item{tdata}{dataset with exactly one row that contains the building and wind statistics necessary to run your model}
+
 \item{tlm}{linear model that you have previously fit, and you can save this as .Rdata file, that you load when you run the script}
 
 \item{cap}{Do not let the simulated value exceed the cap (in this case = 1) cap should also be bounded below by zero.}
 
 \item{flat_line}{set value, for comparison purposes, the mean of the distribution cannot fall below this value.}
+
+\item{metric_adjust}{Adjusts units to metric system}
 
 \item{se}{The standard error for the model}
 
@@ -35,9 +39,7 @@ model_gr(
 
 \item{logsize}{log of area of the roof}
 
-\item{data}{dataset with exactly one row that contains the building and wind statistics necessary to run your model}
-
-\item{rooffalt}{1 if roof is flat (0 degrees), 0 if not}
+\item{roofflat}{1 if roof is flat (0 degrees), 0 if not}
 }
 \description{
 Helps create RTL simulations

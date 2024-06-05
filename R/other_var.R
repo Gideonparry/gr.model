@@ -4,8 +4,9 @@
 #'
 #' @param folder_path The folder path to get to the files
 #' @param pattern The pattern for the files chosen
-#' @param colum The column number to make the update to
+#' @param column The column number to make the update to
 #' @param varval The value to give the variables
+#' @importFrom utils read.csv
 
 
 other_var <- function(folder_path, pattern, column, varval) {

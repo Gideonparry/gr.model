@@ -442,7 +442,7 @@ gr_total$lat <- round(gr_total$lat * 4) / 4
 gr_total$long <- round(gr_total$long * 4) / 4
 
 
-whole_map <- terra::unwrap(readRDS("D:/whole_map.rds"))
+whole_map <- terra::unwrap(readRDS("data-raw/whole_map.rds"))
 whole_map
 
 gr_total$est_wind <- terra::extract(
@@ -468,7 +468,7 @@ gr_total$est_wind <- terra::extract(
 ###############################################################################
 ### adding mapped average wind #####
 
-wind_avg_map <- terra::unwrap(readRDS("D:/wind_avg_map.rds"))
+wind_avg_map <- terra::unwrap(readRDS("data-raw/wind_avg_map.rds"))
 wind_avg_map
 
 gr_total$est_wind_avg <- terra::extract(
@@ -488,7 +488,7 @@ gr_total$est_wind_avg <- terra::extract(
 
 #### adding mapped average temp
 
-temp_avg_map <- terra::unwrap(readRDS("D:/temp_avg_map.rds"))
+temp_avg_map <- terra::unwrap(readRDS("data-raw/temp_avg_map.rds"))
 temp_avg_map
 
 gr_total$est_temp_avg <- terra::extract(

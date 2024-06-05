@@ -8,7 +8,7 @@ gr_cv(
   train_data,
   test_data,
   formula1 = "sqrtgr ~ logground",
-  forumula2 =
+  formula2 =
     "sqrtgr ~ logground + roofflat*Exposure +\\n                  roofflat*winter_wind +\\n                   log(Size) + temp_avg + Heated + Parapet",
   rf_formula = gr ~ ground_max + roofflat + Exposure + winter_wind + Size + temp_avg +
     Heated + Parapet
@@ -21,9 +21,9 @@ gr_cv(
 
 \item{formula1}{The 1st formula to use. Default is logground}
 
-\item{rf_formula}{The formula to use for the random forest}
-
 \item{formula2}{The 2nd fromula to use Returns as "new model"}
+
+\item{rf_formula}{The formula to use for the random forest}
 }
 \description{
 Takes train and test data and comuptes different models to compare accuracy
