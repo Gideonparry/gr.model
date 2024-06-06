@@ -1,3 +1,7 @@
 ^gr\.model\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+scripts
+data-raw
+all_data
+README.txt

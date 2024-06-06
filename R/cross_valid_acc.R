@@ -11,6 +11,7 @@
 #'
 #' @import randomForest
 #' @import stats
+#' @export
 
 cross_valid_acc <- function(data, k = 5,
                             formula1 = "sqrtgr ~ logground",
