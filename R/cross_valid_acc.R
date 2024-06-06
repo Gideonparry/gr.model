@@ -9,8 +9,7 @@
 #' @param formula2 The 2nd fromula to use Returns as "new model"
 #' @param rf_formula The formula to use for the random forest
 #'
-#' @import randomForest
-#' @import stats
+
 #' @export
 
 cross_valid_acc <- function(data, k = 5,

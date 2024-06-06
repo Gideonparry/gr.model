@@ -1,6 +1,8 @@
 #join datasets by ClustID
 #Create ratios- original vs new for RT II and RT IV, new vs sheltered for RT II
 #plot ratios of sheltered vs not sheltered with w2, boxplots/histogram with all
+# RTL data comes from previously run simulations shown in
+# 5_reliability_targeted_loads.R
 
 library(tidyverse)
 library(RColorBrewer)

@@ -87,24 +87,24 @@ Details:
 Folders: 
 
 1. Scripts
-   This folder contains reprodicible scrips to produce the figures and results from the thesis the files in order of
+   This folder contains reproducible scrips to produce the figures and results from the thesis the files in order of
    usage include:
 	Files: 
-      1.data_variables.R: Start with this one. This files obtains the data created from digitizing the Canadian reports
+      0_data_variables.R: Start with this one. This files obtains the data created from digitizing the Canadian reports
 	and aggregating them to one data file
-      2. data.R: This file takes the aggregated data along with metadata to create the final data used in modeling and
-	show relevent figures.
-      3. methods.R: Creates the models used to predict GR. This file shows the process for selecting the final model, including
-	figues and coeficents relevent to doing so.
-      4. Validation_methods.R Shows cross validation being used for models that were attempted in the Thesis. This uses a
+      1_data.R: This file takes the aggregated data along with metadata to create the final data used in modeling and
+	show rrelevant figures.
+      2_methods.R: Creates the models used to predict GR. This file shows the process for selecting the final model, including
+	figues and coefficient relevant for doing so.
+      3_Validation_methods.R Shows cross validation being used for models that were attempted in the Thesis. This uses a
 	function to run 25 different partitions of buildings and observations
-      5. 4_reliability_targeted_loads.R: Not reproducible. Creates simulations of RTLs. This is not reproducible due to the lack
+      4_rtl.R This file uses RTL data and shows effects of different assumptions and different eco regions on RTLs.It shows
+	sheltered vs non sheltered effects, and effects of different assumptions for wind and temperature.
+      5_reliability_targeted_loads.R: Not reproducible. Creates simulations of RTLs. This is not reproducible due to the lack
 	of some r scripts and data files it calls.
-      6. rtl.R This file uses RTL data and shows effects of different assumptions and different eco regions on RTLs.It shows
-	sheltered vs non sheltered effects, and effects of different assumptions of wind and tempetures.
 
 2. data-raw
-	This folder contains data and non reproducible scripts used to create it. Some notable data files are
+	This folder contains data and non-reproducible scripts used to create it. Some notable data files are
 	1. complete_data.csv: This is the data file that data_variables.R creates from the files in complete_data
 	2. gr_meta_ca_all.csv This file is the metadata this complete_data is joined with
 	3. updated_data.csv This is the final data used in modeling after running data.R
@@ -115,16 +115,17 @@ Folders:
 	4. era_maps: scrips used to aggreagate many ERA5 grids into one used in modeling
 
 complete_data
-	This folder contains all data from use of digitizing reports.
+	This folder contains all data obtained from digitized reports. It is recommended to avoid interacting with these 
+	data directly, but rather interact with the data summaries available in the R scripts contained in this repository. 
  
 	
 
 
 Instructions:
 
-To reproduce results and figures found in the thesis, all that needs to be run is data.R, methods.R, 
-validation_methods.R and RTL.R, and RTL.R in that order. data_variables.R and 4_reliability_targeted_loads.R are included
-to demonstrate how these actions were performed, and data_variables.R is reproducible. 
+To reproduce results and figures found in the thesis, all that needs to be run is 1_data.R, 2_methods.R, 
+3_validation_methods.R and 4_rtl.R in that order. 0_data_variables.R and 5_reliability_targeted_loads.R are included
+to demonstrate how these actions were performed, and 0_data_variables.R is reproducible. 
 
 
 

@@ -10,8 +10,9 @@
 #' @param k Number of Cross Validation folds
 #'
 #'
-#' @import randomForest
-#' @import stats
+#' @importFrom stats median
+#'
+#' @export
 
 acc_test <- function(data, k = 5,
                      formula1 = "sqrtgr ~ logground",

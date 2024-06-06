@@ -10,9 +10,9 @@
 #' @param rf_formula The formula to use for the random forest
 #'
 #'
-#' @import Metrics
-#' @import randomForest
-#' @import stats
+#' @importFrom randomForest randomForest
+#' @importFrom stats lm
+#' @importFrom stats predict
 
 
 gr_cv <- function(train_data, test_data,

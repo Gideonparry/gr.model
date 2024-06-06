@@ -1,3 +1,5 @@
+library(gr.model)
+
 gr_total <- read.csv("data-raw//updated_data.csv")
 
 
