@@ -8,8 +8,8 @@ gr_cv(
   train_data,
   test_data,
   formula1 = "sqrtgr ~ logground",
-  formula2 =
-    "sqrtgr ~ logground + roofflat*Exposure +\\n                  roofflat*winter_wind +\\n                   log(Size) + temp_avg + Heated + Parapet",
+  formula2 = sqrtgr ~ logground + roofflat * Exposure + roofflat * winter_wind +
+    log(Size) + temp_avg + Heated + Parapet,
   rf_formula = gr ~ ground_max + roofflat + Exposure + winter_wind + Size + temp_avg +
     Heated + Parapet
 )
