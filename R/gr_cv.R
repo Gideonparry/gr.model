@@ -13,6 +13,7 @@
 #' @importFrom randomForest randomForest
 #' @importFrom stats lm
 #' @importFrom stats predict
+#' @importFrom stats na.omit
 
 
 gr_cv <- function(train_data, test_data,
@@ -49,7 +50,7 @@ gr_cv <- function(train_data, test_data,
   ## It works as is, but making this an argument would be better
   train_rf <- randomForest::randomForest(
     formula = rf_formula,
-    data = train_data, na.action = na.omit
+    data = train_data, na.action = stats::na.omit
   )
   forest_preds <- stats::predict(train_rf, test_data)
 

@@ -11,6 +11,7 @@
 #'
 #'
 #' @importFrom stats median
+#' @importFrom stats na.omit
 #'
 #' @export
 
@@ -52,14 +53,14 @@ acc_test <- function(data, k = 5,
   for(i in seq_len(4)){
     rmse_buildings[i] <-
       sqrt(mean((results_builings[[2]][!is.na(results_builings[[i+4]])] -
-                                       na.omit(results_builings[[i+4]]))^2))
+                                    stats::na.omit(results_builings[[i+4]]))^2))
   }
 
   mdae_buildings <- c()
   for(i in seq_len(4)){
     mdae_buildings[i] <-
       stats::median(abs((results_builings[[2]][!is.na(results_builings[[i+4]])]
-                         - na.omit(results_builings[[i+4]]))))
+                         - stats::na.omit(results_builings[[i+4]]))))
   }
 
   ## Observation stuff

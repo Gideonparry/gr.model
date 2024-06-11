@@ -13,6 +13,8 @@
 #' @param roofflat 1 if roof is flat (0 degrees), 0 if not
 #' @param metric_adjust Adjusts units to metric system
 #'
+#' @importFrom stats rnorm
+#'
 #'
 #' @export
 
@@ -68,7 +70,7 @@ model_gr <- function(snow_loads, tdata, tlm, cap = 1, flat_line = 0.2,
 
   tmeans <- pmax(tmeans, flat_line)
 
-  final_sim <- rnorm(length(tmeans), tmeans, se)
+  final_sim <- stats::rnorm(length(tmeans), tmeans, se)
 
   pmin(pmax(final_sim, 0)^2, cap)
 

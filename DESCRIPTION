@@ -3,8 +3,7 @@ Title: Improving GR Estimations with digitized records
 Version: 1.0.0
 Authors@R: 
     person("Gideon", "Parry", , "gideonparry@protonmail.com", 
-    role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    role = c("aut", "cre"))
 Description: This package shows how the digitized data from the Canadian data
   is cleaned to make use of data in modeling. It starts with converting the 
   digiized data to one file, then cleaning that, then creating models. It also
@@ -14,7 +13,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Imports:
-  Metrics,
   dplyr,
   randomForest,
-  terra
+  terra,
+  stats

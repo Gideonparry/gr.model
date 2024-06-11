@@ -8,6 +8,7 @@
 #' @param var2 2nd wind variable to use
 #'
 #' @importFrom terra rast
+#' @importFrom terra nlyr
 
 
 wind_avg_grid <- function(file, var1 = "u10", var2 = "v10") {
@@ -19,7 +20,7 @@ wind_avg_grid <- function(file, var1 = "u10", var2 = "v10") {
 
   wind_speed <- sqrt(u10^2 + v10^2)
 
-  avg_wind <- sum(wind_speed) / nlyr(wind_speed)
+  avg_wind <- sum(wind_speed) / terra::nlyr(wind_speed)
 
   avg_wind
 }

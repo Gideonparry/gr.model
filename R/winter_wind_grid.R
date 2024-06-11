@@ -8,6 +8,7 @@
 #' @param var2 2nd wind variable to use
 #'
 #' @importFrom terra rast
+#' @importFrom terra nlyr
 
 
 winter_wind_grid <- function(file, var1 = "u10", var2 = "v10") {
@@ -19,7 +20,7 @@ winter_wind_grid <- function(file, var1 = "u10", var2 = "v10") {
 
   wind_speed <- sqrt(u10^2 + v10^2)
 
-  winter_wind <- sum(wind_speed > 4.4704) / nlyr(wind_speed)
+  winter_wind <- sum(wind_speed > 4.4704) / terra::nlyr(wind_speed)
 
   winter_wind
 }
